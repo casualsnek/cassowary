@@ -34,7 +34,7 @@ $ pip3 install PyQt5
 ```
 $ pip install cassowary*
 ```
-- Launch cassowary configuration utility with ```$ cassowary -a```
+- Launch cassowary configuration utility with ```$ python3 -m cassowary -a```
 - Head over to misc tab and click on 'Setup Autostart' and 'Create' this will bring cassowary to your application menu and setu background service autostart
 
 ## Setting up Windows vm with virt-manager and KVM
