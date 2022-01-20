@@ -47,8 +47,12 @@ class ApplicationData:
         applications = []
         for installation_mode in [winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER]:
             # Open HKLM and HKCU and look for installed applications
-            registry = winreg.ConnectRegistry(None, installation_mode)
-            app_path_key = winreg.OpenKey(registry, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths")
+            try:
+                registry = winreg.ConnectRegistry(None, installation_mode)
+                app_path_key = winreg.OpenKey(registry, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths")
+            except FileNotFoundError:
+                # If the Key does not exist instead of throwing an exception safely ignore it
+                pass
             # Open the directories on App Path -Accessing requires defined integer, so we loop Until we get WinError 259
             for n in range(1000):
                 try:
