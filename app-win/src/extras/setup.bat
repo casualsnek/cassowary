@@ -70,7 +70,7 @@
  SETX /M PATH "%PATH%;C:\Program Files\cassowary\"
  echo "==> Creating scheduled task to run server after logon"
  schtasks /Create /TR "wscript.exe 'C:\Program Files\cassowary\cassowary_nw.vbs' -s" /TN cassowary-server /SC ONLOGON /IT
-  echo "==> Allowing cassowary through firewall"
- netsh firewall add allowedprogram C:\Program Files\cassowary\cassowary.exe' Cassowary ENABLE
- echo "~~~~~~~~~~~~~~~ Completed ~~~~~~~~~~~~~~~~~"
+ echo "==> Allowing cassowary through firewall"
+ netsh advfirewall firewall add rule name="Cassowary Server" dir=in action=allow program="C:\Program Files\cassowary\cassowary.exe" enable=yes
+ echo " ==> Setup complete, press any key to exit .... Restart for all changes to take place !"
  pause
