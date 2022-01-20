@@ -27,7 +27,7 @@ Here we will be using arch linux, you can easily find equivalent commands for yo
 - Open terminal on the location where you downloaded the .whl file
 - Install python3 and dependencies by running following commands on terminal
 ```
-$ sudo pacman -Sy python3 python3-pip freerdp
+$ sudo pacman -Sy python3 python-pip freerdp
 $ pip3 install PyQt5
 ```
 - Install the downloaded .whl file by running
