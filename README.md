@@ -1,5 +1,8 @@
 # <img src="app-linux/src/cassowary/gui/extrares/cassowary.svg" alt="Logo" width="200"/>  Cassowary 
 
+
+[![Visits Badge](https://badges.pufler.dev/visits/casualsnek/cassowary)](https://github.com/casualsnek)
+
 With cassowary you can run windows vm and use windows applications on linux as if they are native applications by using freerdp and remote apps as base.
 
 #### Cassowary supports
