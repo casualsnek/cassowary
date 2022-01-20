@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from .minidialog import MiniDialog
-from base.cfgvars import cfgvars
-from base.functions import add_network_share, add_network_map
+from cassowary.base.cfgvars import cfgvars
+from cassowary.base.functions import add_network_share, add_network_map
 import os
 
 

@@ -61,6 +61,9 @@
  REM Run shell as admin (example) - put here code as you like
  echo "==> Copying files to Program Files directory"
  Xcopy /E /I /Y cassowary\ "C:\Program Files\cassowary\"
+ echo "==> Copying no console script and hostopen.bat"
+ Xcopy /I /Y cassowary_nw.vbs "C:\Program Files\cassowary\"
+ Xcopy /I /Y hostopen.bat "C:\Program Files\cassowary\"
  echo "==> Importing registry keys"
  reg import setup.reg
  echo "==> Setting up path variables"

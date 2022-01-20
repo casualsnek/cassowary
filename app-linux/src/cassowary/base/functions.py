@@ -1,5 +1,5 @@
 import os
-from base.cfgvars import cfgvars
+from .cfgvars import cfgvars
 
 
 def get_basic_info(client, timeout=5):

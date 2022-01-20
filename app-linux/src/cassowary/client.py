@@ -4,10 +4,10 @@ import json
 import threading
 import time
 import traceback
-from base.cfgvars import cfgvars
-from base.helper import create_reply, create_request, get_windows_cifs_locations, replace_vars, mount_pending, \
+from .base.cfgvars import cfgvars
+from .base.helper import create_reply, create_request, get_windows_cifs_locations, replace_vars, mount_pending, \
     handle_win_ip_paths
-from base.log import get_logger
+from .base.log import get_logger
 
 logger = get_logger(__name__)
 

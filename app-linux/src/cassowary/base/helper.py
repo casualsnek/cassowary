@@ -1,7 +1,7 @@
 import random
 import string
-from base.cfgvars import cfgvars
-from base.log import get_logger
+from .cfgvars import cfgvars
+from .log import get_logger
 import os
 
 logger = get_logger(__name__)

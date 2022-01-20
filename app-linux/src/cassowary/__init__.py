@@ -3,12 +3,12 @@ import os
 import sys
 import traceback
 import time
-from base.log import get_logger
-from base.helper import path_translate_to_guest
-from base.cfgvars import cfgvars
+from .base.log import get_logger
+from .base.helper import path_translate_to_guest
+from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
-from gui.components.main_ui import MainWindow
-from client import Client
+from .gui.components.main_ui import MainWindow
+from .client import Client
 
 
 def main():

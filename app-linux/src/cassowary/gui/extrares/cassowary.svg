@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="64"
-   height="64"
-   viewBox="0 0 16.933333 16.933334"
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733336"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
@@ -28,9 +28,9 @@
      showgrid="false"
      units="px"
      width="64px"
-     inkscape:zoom="9.0796216"
-     inkscape:cx="48.735511"
-     inkscape:cy="32.820751"
+     inkscape:zoom="1.2859435"
+     inkscape:cx="-151.63964"
+     inkscape:cy="188.96632"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
      inkscape:window-x="0"
@@ -50,7 +50,7 @@
        transform="scale(0.26458333)" />
     <g
        id="g71053"
-       transform="matrix(-0.91434467,0,0,0.91434467,-16.948371,-6.9780832)">
+       transform="matrix(-3.7172507,0,0,3.7172507,-73.847609,-29.20206)">
       <path
          style="opacity:1;fill:#2d2d2f;fill-opacity:0.898039;stroke:#3b68cb;stroke-width:0.000264583;stroke-linecap:round;stroke-opacity:0.807843"
          d="m -33.756579,17.39684 a 0.16549879,0.46640564 70.876847 0 1 0.167433,0.06615 0.16549879,0.46640564 70.876847 0 1 -0.38654,0.309025 0.16549879,0.46640564 70.876847 0 1 -0.494543,-0.0036 0.16549879,0.46640564 70.876847 0 1 0.38654,-0.309025 0.16549879,0.46640564 70.876847 0 1 0.32711,-0.06253 z"

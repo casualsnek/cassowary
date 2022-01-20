@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from base.cfgvars import cfgvars
+from cassowary.base.cfgvars import cfgvars
 import os
 
 

@@ -1,13 +1,13 @@
 import os.path
 import socket
 from PyQt5.QtWidgets import *
-from base.functions import *
-from base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name
+from cassowary.base.functions import *
+from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name
 from .minidialog import MiniDialog
 from .sharesandmaps import AddMapDialog, AddShareDialog
 from .desktopitemdialog import DesktopItemDialog
 from PyQt5 import uic
-from client import Client
+from cassowary.client import Client
 
 
 class MainWindow(QMainWindow):

@@ -5,11 +5,11 @@ import logging
 import sys
 import traceback
 
-from base.log import setup_logging
-from base.helper import path_translate_to_guest
-from base.cfgvars import cfgvars
+from .base.log import setup_logging
+from .base.helper import path_translate_to_guest
+from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
-from gui.components.main_ui import MainWindow
+from .gui.components.main_ui import MainWindow
 
 if __name__ == "__main__":
     setup_logging()
