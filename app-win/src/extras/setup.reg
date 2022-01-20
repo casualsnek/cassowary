@@ -1,0 +1,25 @@
+Windows Registry Editor Version 5.00
+    [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+    "LongPathsEnabled"=dword:00000001
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+    "EnableLUA"=dword:00000000
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Terminal Server]
+    "fDenyTSConnections"=dword:00000000
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Terminal Server\TSAppAllowList]
+    "fDisabledAllowList"=dword:00000001
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
+    "fAllowUnlistedRemotePrograms"=dword:00000001
+
+    [HKEY_CLASSES_ROOT\Directory\Background\shell\Open host Xterm here\command]
+    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c open-host-term \"%V\""
+
+    [HKEY_CLASSES_ROOT\*\shell\Open with default app on host\command]
+    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open \"%1\""
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\cassowary.exe]
+    @=""
+    UseUrl=dword:00000001
