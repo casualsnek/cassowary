@@ -18,7 +18,7 @@ With cassowary you can run windows vm and use windows applications on linux as i
 - Building cassowory from source
 - Extra How to's and FAQ
 - How can i help ?
-## Installing up cassawory on linux host
+## Installing cassawory on Linux host
 Here we will be using arch linux, you can easily find equivalent commands for your linux distro
 - Goto the release page and download lastest .whl file
 - Open terminal on the location where you downloaded the .whl file
@@ -102,14 +102,14 @@ with
 
 
 ## Installing up cassowary on windows and linux
-#### On windows 
+#### On Windows 
 - Open Settings and Click on System and Scroll to bottom and click on Remote desktop then Click on Enable Remote Desktop and click confirm !
 - Open this page and download latest .zip from the release page
 - Extract the downloaded zip file
 - Double click on setup.bat located on extracted directory
 - Logout and login again to windows session
 - After you have logged in continue the instructions below
-#### On linux
+#### On Linux
 - Launch cassowary linux using your application menu or run ```$ python3 -m cassowary -a ```
 - Enter the VM name from the vm setup step in this case 'win10'
 - Click on 'Save changes' and then on 'Autodetect', this should automatically fill up the vm IP
