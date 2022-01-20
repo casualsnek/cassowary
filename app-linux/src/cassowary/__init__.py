@@ -1,5 +1,6 @@
 import argparse
 import os
+import subprocess
 import sys
 import traceback
 import time
@@ -185,9 +186,10 @@ def main():
                         #                      |--------| (C:| or D:| ) will not launch due to \ at end escaping the
                         #                      V        | ending quote
                         cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
-                    cmd = cmd + " 1> /dev/null 2>&1 &"
+                    #cmd = cmd + " 1> /dev/null 2>&1 &"
                     print("Commandline: {}".format(cmd))
-                    os.popen("sh -c '{}' &".format(cmd))
+                    process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
+                    process.wait()
                 elif args.command == "guest-open":
                     path = path_translate_to_guest(args.cmdline[0])
                     if " " in path:
@@ -203,7 +205,8 @@ def main():
                                               execu="cmd.exe", icon=icon)
                     cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
                     print("Commandline: {}".format(cmd))
-                    os.popen("sh -c '{}' &".format(cmd))
+                    process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
+                    process.wait()
                 elif args.command == "raw-cmd":
                     client__ = Client(cfgvars.config["host"], cfgvars.config["port"])
                     client__.init_connection()
