@@ -6,6 +6,7 @@
 With cassowary you can run windows vm and use windows applications on linux as if they are native applications by using freerdp and remote apps as base.
 
 **If you prefer a setup guide video instead of wall of text :  [Click Here](https://www.youtube.com/watch?v=ftq-c_VgmK0)**
+
 Give a star ⭐ or follow if you find this project useful
 
 #### Cassowary supports
