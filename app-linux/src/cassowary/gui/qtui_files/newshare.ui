@@ -202,7 +202,7 @@
       <item>
        <widget class="QPushButton" name="btn_createshare">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(170, 255, 127);</string>
+         <string notr="true">background-color: rgb(0, 85, 0);</string>
         </property>
         <property name="text">
          <string>Share</string>
@@ -212,7 +212,7 @@
       <item>
        <widget class="QPushButton" name="btn_cancel">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 85, 127);</string>
+         <string notr="true">background-color: rgb(85, 0, 0);</string>
         </property>
         <property name="text">
          <string>Cancel</string>

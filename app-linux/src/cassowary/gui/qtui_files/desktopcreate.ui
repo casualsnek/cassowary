@@ -203,7 +203,7 @@
       <item>
        <widget class="QPushButton" name="btn_save">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(170, 255, 127);</string>
+         <string notr="true">background-color: rgb(0, 85, 0);</string>
         </property>
         <property name="text">
          <string>Create Menu Shortcut</string>
@@ -213,7 +213,7 @@
       <item>
        <widget class="QPushButton" name="btn_dismiss">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 0, 127);</string>
+         <string notr="true">background-color: rgb(85, 0, 0);</string>
         </property>
         <property name="text">
          <string>Cancel</string>

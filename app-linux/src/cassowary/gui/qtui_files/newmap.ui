@@ -271,7 +271,7 @@
       <item>
        <widget class="QPushButton" name="btn_create">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 124, 45);</string>
+         <string notr="true">background-color: rgb(0, 85, 0);</string>
         </property>
         <property name="text">
          <string>Create Map</string>
@@ -281,7 +281,7 @@
       <item>
        <widget class="QPushButton" name="btn_cancel">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(149, 74, 48);</string>
+         <string notr="true">background-color: rgb(85, 0, 0);</string>
         </property>
         <property name="text">
          <string>Cancel</string>
