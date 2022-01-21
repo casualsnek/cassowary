@@ -26,9 +26,9 @@ class DesktopItemDialog(QDialog):
         except:
             pass
         self.inp_name.setText(name)
-        self.inp_description.setText(description)
-        self.inp_comment.setText("'{}' version '{}' (casualRDH remote application)".format(name, version))
-        self.inp_command.setText("python3 -m cassowary -c guest-run -- '{}' %u".format(path))
+        self.inp_description.setText(description+" (casualRDH remote application)")
+        self.inp_comment.setText("'{}' version '{}'".format(name, version))
+        self.inp_command.setText("python3 -m cassowary -c guest-run -- '{}' %u".format(path).replace("\\", "\\\\"))
         # Not using pixmap for now, just use css border-image
         self.lb_appicon.setStyleSheet("border-image: url('{}')".format(icon_path))
         self.btn_save.clicked.connect(lambda: self.__save_desktop(filename, icon_path))
