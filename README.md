@@ -27,7 +27,7 @@ Here we will be using arch linux, you can easily find equivalent commands for yo
 - Open terminal on the location where you downloaded the .whl file
 - Install python3 and dependencies by running following commands on terminal
 ```
-$ sudo pacman -Sy python3 python-pip freerdp
+$ sudo pacman -S python3 python-pip freerdp
 $ pip3 install PyQt5
 ```
 - Install the downloaded .whl file by running
@@ -42,7 +42,7 @@ This will help you set up an efficient virtual machine for use with cassowary.
 
 #### We start by installing virt-manager and KVM
 ```
-$ sudo pacman -Sy virt-manager
+$ sudo pacman -S virt-manager
 ```
 
 #### Making KVM run without root access
