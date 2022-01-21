@@ -15,15 +15,15 @@ With cassowary you can run windows vm and use windows applications on linux as i
 - Creating application launcher for windows application easily
 
 #### This README consists of instructions for
-- Installing up cassawory on linux host
+- Installing up cassowary on linux host
 - Setting up Windows vm with virt-manager
 - Installing up cassowary on windows and linux
-- Building cassowory from source
+- Building cassowary from source
 - Extra How to's and FAQ
 - How can i help ?
-## Installing cassawory on Linux host
+## Installing cassowary on Linux host
 Here we will be using arch linux, you can easily find equivalent commands for your linux distro
-- Goto the release page and download lastest .whl file
+- Goto the release page and download latest .whl file
 - Open terminal on the location where you downloaded the .whl file
 - Install python3 and dependencies by running following commands on terminal
 ```
@@ -35,7 +35,7 @@ $ pip3 install PyQt5
 $ pip install cassowary*
 ```
 - Launch cassowary configuration utility with ```$ python3 -m cassowary -a```
-- Head over to misc tab and click on 'Setup Autostart' and 'Create' this will bring cassowary to your application menu and setu background service autostart
+- Head over to misc tab and click on 'Setup Autostart' and 'Create' this will bring cassowary to your application menu and setup background service autostart
 
 ## Setting up Windows vm with virt-manager and KVM
 This will help you set up an efficient virtual machine for use with cassowary.
@@ -63,7 +63,7 @@ Download windows 10 iso from [HERE](https://www.microsoft.com/en-us/software-dow
 
 Download latest virtio driver iso images from: [HERE](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
 
-and save them in convienent location
+and save them in convenient location
 
 #### Creating Virtual Machine
 - Open virt-manager from your application menu
@@ -97,8 +97,8 @@ with
 - After some time you will get to 'Let's connect to internet page', click on 'I dont have internet at bottom left' and continue with limited setup
 - Set you username and password
 - After you get to windows 10 desktop open This pc and browse to virtio-win CD drive and double click on virtio-win-gt-x64.exe
-- Shut down the VM and on the top left click on show 'Show virtual hardware button' ( second buton from the top left of vm window the `i` button )
-- Go to Display Spice section and Set listen type to None also check the OpenGL option and click Aply
+- Shut down the VM and on the top left click on show 'Show virtual hardware button' ( second button from the top left of vm window the `i` button )
+- Go to Display Spice section and Set listen type to None also check the OpenGL option and click Apply
 - Go to Video QXL section and set Model to Virtio and check the 3D acceleration option
 - Start the VM by clicking the play button on top left. ( You may need to click the Monitor icon to show the VM screen ) and login to desktop
 - Open up edge and browse to this page and continue the instructions for installing cassowary
@@ -116,7 +116,7 @@ with
 - Launch cassowary linux using your application menu or run ```$ python3 -m cassowary -a ```
 - Enter the VM name from the vm setup step in this case 'win10'
 - Click on 'Save changes' and then on 'Autodetect', this should automatically fill up the vm IP
-- Click 'Save changes' again then click 'Autofill host/username' then enter the passowrd you set during the windows setup. Then click 'Save changes'...againn
+- Click 'Save changes' again then click 'Autofill host/username' then enter the password you set during the windows setup. Then click 'Save changes'...again
 - Now goto 'Guest app' tab and create shortcut for any application you want
 
 Now you can find application on your application menu which you can use to launch apps easily
@@ -135,17 +135,17 @@ also a bin folder will be created in app-windows containing the setup files
 
 ## Extra How to's and FAQ
 ##### Q. Launch terminal/Open on host on windows file manager says drive is not shared ?
-A. Open cassawory on linux, goto 'Folder Maping tab' Goto 'Windows->Linux' sub tab then create a new share for drive where the file is located then cick on mount all
+A. Open cassowary on linux, goto 'Folder Mapping tab' Goto 'Windows->Linux' sub tab then create a new share for drive where the file is located then click on mount all
 
 ##### Q. How to i share my folder on linux to windows as local drive ?
-A. Open cassawory on linux, goto 'Folder Maping tab' Goto 'Linux->Windows'
+A. Open cassowary on linux, goto 'Folder Mapping tab' Goto 'Linux->Windows'
 sub tab then click on Create new file, Give name to share, browse location, choose drive letter then click on create map
 
 ##### Q. How to launch windows application that is not listed on guest app by path on windows ?
 A. Run ```python3 -m cassowary cassowary -c guest-run -- { path to app and arguments } ```
 
 ##### Q. How do i set links and files on windows to open on linux host application ?
-A. Set the default app for a file type or default browser to 'C:\Program Files\cassawory\hostopen.bat'
+A. Set the default app for a file type or default browser to 'C:\Program Files\cassowary\hostopen.bat'
 
 ##### Q. How do i set to launch a file type on linux on windows application ?
 A. Most linux system allow setting default application for file type, create a Application menu entry for the app you want and set default application to the created desktop application.
@@ -154,7 +154,7 @@ A. Most linux system allow setting default application for file type, create a A
 A. Since cassowary wont launch without a user being logged in, try launching any windows application and click reconnect !
 
 ##### Q. Open on host or open host terminal does not work ?
-A. Make sure you have setup background service autostart ( logout and login is required after clicking on setup button ), You can alos try manually launching background service using ```$ python -m cassowary -bc ```
+A. Make sure you have setup background service autostart ( logout and login is required after clicking on setup button ), You can also try manually launching background service using ```$ python -m cassowary -bc ```
 
 ##### Q. I have found a bug/issue, have a suggestion or i have questions not answered here !
 A. Feel free to open an issue here ! 
