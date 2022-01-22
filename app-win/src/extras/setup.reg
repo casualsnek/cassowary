@@ -14,7 +14,7 @@ Windows Registry Editor Version 5.00
     [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services]
     "fAllowUnlistedRemotePrograms"=dword:00000001
 
-    [HKEY_CLASSES_ROOT\Directory\Background\shell\Open host Xterm here\command]
+    [HKEY_CLASSES_ROOT\Directory\Background\shell\Open host terminal here\command]
     @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c open-host-term \"%V\""
 
     [HKEY_CLASSES_ROOT\*\shell\Open with default app on host\command]

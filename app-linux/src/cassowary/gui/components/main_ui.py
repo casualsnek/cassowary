@@ -164,9 +164,13 @@ Version=1.0
     def __reconnect(self, no_popup=False):
 
         logger.debug("Tring to start a RDP session for server side component to start !")
-        cmd = 'xfreerdp /d:"DESKTOP-CL49IGD" /u:"casual" /p:"11111111" /v:192.168.122.24 +clipboard /a:drive,root,/ ' \
+        cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
               '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \
-              '/wm-class:"cassowaryApp-echo"'
+              '/wm-class:"cassowaryApp-echo" /app:"echo"'.format( domain=cfgvars.config["winvm_hostname"],
+                                                                  user=cfgvars.config["winvm_username"],
+                                                                  passd=cfgvars.config["winvm_password"],
+                                                                  ip=cfgvars.config["host"]
+                                                                  )
         process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
         logger.debug("Waiting for session startup process to terminate ")
         process.wait()

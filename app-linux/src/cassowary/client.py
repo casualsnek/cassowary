@@ -123,7 +123,7 @@ class Client():
                             path = message["command"][1]
                             handled, path = handle_win_ip_paths(path)
                             if handled is not False:
-                                print('sh -c \'{term} -e bash -c "cd \\\\"{path}\\\\""; exec bash" &\''.format(
+                                print('sh -c \'{term} -e bash -c "cd \\\\"{path}\\\\""; exec $SHELL" &\''.format(
                                     path=path,
                                     term=cfgvars.config["term"]
                                 ))
