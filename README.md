@@ -21,11 +21,10 @@ Give a star ⭐ or follow if you find this project useful
 1. [Setting up Windows VM with virt-manager](docs/1-virt-manager.md)
 2. [Installing cassowary on Windows guest and Linux host](docs/2-cassowary-install.md)
 3. [Extra How to's and FAQ](docs/3-faq.md)
+4. Building cassowary from source
+5. How can i help?
 
-- Building cassowary from source
-- How can i help?
-
-# Building cassowary from source
+# 4. Building cassowary from source
 Install wine first in order to build windows application on linux, internet is required to download python binary for setup 
 
 ```
@@ -37,7 +36,7 @@ $ ./buildall.sh
 This will result a dist folder inside app-linux which contains the installed wheel file
 also a bin folder will be created in app-windows containing the setup files
 
-# How can i help ?
+# 5. How can i help ?
 - Improve the README.md
 - Report bugs or submit patches
 - Maybe video instructions for new users, or add screenshots with the setup instructions
