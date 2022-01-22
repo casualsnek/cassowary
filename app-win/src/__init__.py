@@ -14,7 +14,7 @@ if __name__ == "__main__":
     #####################################################################################
     #  cassowary Server/Client App (Windows) - Integrate Windows VM with linux hosts    #
     # ---------------------------- Software info ---------------------------------------#
-    #      Version     : 0.1A                                                           #
+    #      Version     : 0.2A                                                           #
     #      GitHub      : https://github.com/casualsnek/cassowary                        # 
     #      License     : GPLv2                                                          #
     #      Maintainer  : @casualsnek (Github)                                           #
