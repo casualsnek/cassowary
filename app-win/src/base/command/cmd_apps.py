@@ -1,4 +1,5 @@
 import os
+import traceback
 import winreg
 import win32api
 from base64 import b64encode
@@ -67,7 +68,8 @@ class ApplicationData:
                     elif str(e) == "[WinError 2] The system cannot find the file specified":
                         pass
                     else:
-                        raise e
+                        logger.error("Exception while scanning for apps ! : "+traceback.format_exc())
+                        pass
         return applications
 
     def run_cmd(self, cmd):
