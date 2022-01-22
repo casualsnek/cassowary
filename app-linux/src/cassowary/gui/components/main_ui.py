@@ -2,13 +2,16 @@ import os.path
 import socket
 from PyQt5.QtWidgets import *
 from cassowary.base.functions import *
+from cassowary.base.log import get_logger
 from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name
 from .minidialog import MiniDialog
 from .sharesandmaps import AddMapDialog, AddShareDialog
 from .desktopitemdialog import DesktopItemDialog
 from PyQt5 import uic
 from cassowary.client import Client
+import subprocess
 
+logger = get_logger(__name__)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -22,7 +25,7 @@ class MainWindow(QMainWindow):
         self.new_share_dialog = AddShareDialog()
 
         # Create a client
-        self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
+        self.client = None
         self.__reconnect(no_popup=True)
 
         # Fix the table columns
@@ -159,6 +162,16 @@ Version=1.0
             self.dialog.run(data)
 
     def __reconnect(self, no_popup=False):
+
+        logger.debug("Tring to start a RDP session for server side component to start !")
+        cmd = 'xfreerdp /d:"DESKTOP-CL49IGD" /u:"casual" /p:"11111111" /v:192.168.122.24 +clipboard /a:drive,root,/ ' \
+              '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \
+              '/wm-class:"cassowaryApp-echo"'
+        process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
+        logger.debug("Waiting for session startup process to terminate ")
+        process.wait()
+        logger.debug("Session startup process completed.")
+        self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
         try:
             print("Trying to reconnect")
             self.client.init_connection()
@@ -182,7 +195,8 @@ Version=1.0
         if ip is not None:
             self.inp_vmip.setText(ip)
         else:
-            self.dialog.run("Cannot get IP by VM name ! \n Make sure VM name is correct and VM has active connection"
+            self.dialog.run("Cannot get IP by VM name ! \n Make sure VM name is correct, VM is "
+                            "not running as User Session and has active connection"
                             "")
 
     def __unmount_done(self):
