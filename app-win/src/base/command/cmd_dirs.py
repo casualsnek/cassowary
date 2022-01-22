@@ -18,10 +18,13 @@ class DriveShareHelper:
         if os.path.exists("\\\\tsclient\\root"):
             active_maps = self.__get_active_network_maps()
             if "Z:\\" not in active_maps:
+                logger.debug("Z: is not mapped... Mapping now")
                 # No map for root, create one now
                 cmd_out = uac_cmd_exec("net use Z: \\\\tsclient\\root /persistent:Yes", noadmin=True, timeout=8)
                 if "command completed successfully" in cmd_out:
-                    print("Host root is now mounted as Z :) ")
+                    logger.debug("Host root is now mounted as Z :) ")
+                else:
+                    logger.error("Failed to map host root to Z: -> net use command returned: "+cmd_out)
         else:
             logger.debug("Looks like this is not a RDP session, share for root folder not found")
 

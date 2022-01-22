@@ -63,9 +63,9 @@ class ApplicationData:
                     if path not in applications:
                         applications.append(path)
                 except Exception as e:
-                    if str(e) == "[WinError 259] No more data is available":
+                    if str(e) == "[WinError 259]":
                         break
-                    elif str(e) == "[WinError 2] The system cannot find the file specified":
+                    elif str(e) == "[WinError 2]":
                         pass
                     else:
                         logger.error("Exception while scanning for apps ! : "+traceback.format_exc())

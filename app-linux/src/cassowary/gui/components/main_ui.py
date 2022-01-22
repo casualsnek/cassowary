@@ -82,6 +82,7 @@ Version=1.0
             os.makedirs(app_dir)
         with open(os.path.join(app_dir, "cassowary_linux_bg_service.desktop"), "w") as df:
             df.write(desktop_item)
+        os.system("chmod +x {path}".format(path=os.path.join(app_dir, "cassowary_linux_bg_service.desktop")))
         self.dialog.run("Background service autostart script created for current user !")
 
     def __create_menu_item(self):

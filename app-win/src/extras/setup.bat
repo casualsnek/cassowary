@@ -59,6 +59,8 @@
  ::START
  ::::::::::::::::::::::::::::
  REM Run shell as admin (example) - put here code as you like
+ echo "==> Killing running cassowary instance"
+ taskkill /im cassowary.exe /f
  echo "==> Copying files to Program Files directory"
  Xcopy /E /I /Y cassowary\ "C:\Program Files\cassowary\"
  echo "==> Copying no console script and hostopen.bat"
