@@ -22,7 +22,14 @@ def warn_dependencies():
 def ip_by_vm_name(name):
     out = os.popen("virsh domifaddr {}".format(name)).read().strip().split("\n")
     if out != [""]:
-        return out[2].strip().split()[3].split("/")[0]
+        try:
+            ip = out[2].strip().split()[3].split("/")[0]
+            return ip
+        except IndexError:
+            logger.debug("Vm exists but ip could not be fetched Maybe vm is running in user session"
+                         " which is not supported !. Vm name: %s", name)
+            return None
+
     else:
         logger.debug("Cannot find vm by name using virsh. Vm name: %s", name)
         return None
