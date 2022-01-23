@@ -362,7 +362,7 @@ Version=1.0
                 # Fill the row
                 rows = self.tbl_installedapps.rowCount()
                 self.tbl_installedapps.insertRow(rows)
-                self.tbl_installedapps.setItem(rows, 0, QTableWidgetItem(name))
+                self.tbl_installedapps.setItem(rows, 0, QTableWidgetItem(name+" ("+path.split("\\")[-1]+")"))
                 self.tbl_installedapps.setItem(rows, 1, QTableWidgetItem(version))
                 self.tbl_installedapps.setCellWidget(rows, 2, btn)
         else:

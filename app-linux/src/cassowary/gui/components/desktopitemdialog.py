@@ -22,19 +22,20 @@ class DesktopItemDialog(QDialog):
                 with open(icon_path, "wb") as ico_file:
                     ico_file.write(base64.b64decode(icon))
             else:
-                icon_path = cfgvars.config["gui/extrares/defaulticon.png"] # This wont work
-        except:
+                icon_path = cfgvars.config["def_icon"]
+        except KeyError:
             pass
         self.inp_name.setText(name)
-        self.inp_description.setText(description+" (casualRDH remote application)")
+        self.inp_icon.setText(icon_path)
+        self.inp_description.setText(description + " (casualRDH remote application)")
         self.inp_comment.setText("'{}' version '{}'".format(name, version))
         self.inp_command.setText("python3 -m cassowary -c guest-run -- '{}' %u".format(path).replace("\\", "\\\\"))
         # Not using pixmap for now, just use css border-image
         self.lb_appicon.setStyleSheet("border-image: url('{}')".format(icon_path))
-        self.btn_save.clicked.connect(lambda: self.__save_desktop(filename, icon_path))
+        self.btn_save.clicked.connect(lambda: self.__save_desktop(filename))
         self.exec_()
 
-    def __save_desktop(self, filename, icon_path):
+    def __save_desktop(self, filename):
         template = """[Desktop Entry]
 Comment={comment}
 Encoding=UTF-8
@@ -44,20 +45,15 @@ Icon={icon}
 Name[en_US]={name}
 Name={name}
 Categories={category}
-Path=
 StartupNotify=true
 Terminal=false
-TerminalOptions=
 Type=Application
 Version=1.0
-X-DBUS-ServiceName=
-X-DBUS-StartupType=
 X-KDE-RunOnDiscreteGpu=false
 X-KDE-SubstituteUID=false
-X-KDE-Username=
         """.format(comment=self.inp_comment.text(), exec_path=self.inp_command.text(),
                    generic_name=self.inp_description.text(), name=self.inp_name.text(),
-                   icon=icon_path, category=self.inp_categories.text())
+                   icon=self.inp_icon.text(), category=self.inp_categories.text())
         try:
             desktop_file_path = os.path.join(os.path.expanduser("~"), ".local", "share", "applications",
                                              filename + ".desktop")

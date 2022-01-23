@@ -24,7 +24,7 @@ class Vars:
             "term": "xterm",
             "rdp_scale": 100,
             "rdp_multimon": 0,
-            "def_icon": os.path.abspath("gui/extrares/defaulticon.png"),
+            "def_icon": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gui/extrares/cassowary_app.png"),
             "rdp_flags": "",
             "port": 7220,
             "cached_drive_shares": {},

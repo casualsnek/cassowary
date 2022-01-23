@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
-    <height>350</height>
+    <width>663</width>
+    <height>359</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,7 +68,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLabel" name="lb_categories">
+     <widget class="QLabel" name="lb_icon">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -94,7 +94,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>CasualRDH;</string>
+       <string>CasualRDH;Utilities;</string>
       </property>
      </widget>
      <widget class="QLabel" name="lb_appicon">
@@ -140,8 +140,8 @@
      <widget class="QLineEdit" name="inp_comment">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>160</y>
+        <x>190</x>
+        <y>180</y>
         <width>431</width>
         <height>39</height>
        </rect>
@@ -151,7 +151,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>170</y>
+        <y>190</y>
         <width>141</width>
         <height>17</height>
        </rect>
@@ -164,7 +164,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>210</y>
+        <y>230</y>
         <width>141</width>
         <height>17</height>
        </rect>
@@ -176,11 +176,40 @@
      <widget class="QLineEdit" name="inp_command">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>200</y>
+        <x>190</x>
+        <y>220</y>
         <width>431</width>
         <height>39</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lb_categories_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>150</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>App icon</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="inp_icon">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>140</y>
+        <width>281</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -203,7 +232,7 @@
       <item>
        <widget class="QPushButton" name="btn_save">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 85, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Create Menu Shortcut</string>
@@ -213,7 +242,7 @@
       <item>
        <widget class="QPushButton" name="btn_dismiss">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(85, 0, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Cancel</string>
