@@ -1,8 +1,11 @@
 import random
 import string
+import time
+import subprocess
 from .cfgvars import cfgvars
 from .log import get_logger
 import os
+import re
 
 logger = get_logger(__name__)
 
@@ -196,3 +199,57 @@ def create_reply(message, data, status):
     message["status"] = 1 if status else 0
     message["data"] = data
     return message
+
+def full_rdp():
+    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,/ +auto-reconnect +clipboard '\
+              '/cert-ignore /audio-mode:1 /scale:{scale} /wm-class:"cassowaryApp-FULLSESSION" /dynamic-resolution' \
+              ' /{mflag} {rdflag} 1> /dev/null 2>&1 &'
+    multimon_enable = int(os.environ.get("RDP_MULTIMON", cfgvars.config["rdp_multimon"]))
+    cmd_final = command.format(
+        rdflag=cfgvars.config["rdp_flags"],
+        domain=cfgvars.config["winvm_hostname"],
+        user=cfgvars.config["winvm_username"],
+        passd=cfgvars.config["winvm_password"],
+        ip=cfgvars.config["host"],
+        scale=cfgvars.config["rdp_scale"],
+        rdc = cfgvars.config["full_session_client"],
+        mflag="multimon" if multimon_enable else "span"
+    )
+    logger.debug("Creating a full RDP session with commandline  : " + command)
+    process = subprocess.Popen(["sh", "-c", "{}".format(cmd_final)])
+    process.wait()
+    logger.debug("Full RDP session ended !")
+
+def vm_suspension_handler():
+    logger.debug("VM watcher active !")
+    logger.debug("VM suspend on inactivity is "+"enabled" if bool(cfgvars.config["vm_auto_suspend"]) else "disabled")
+    last_active_on = int(time.time()) # Should at least wait for one timeout
+    tc = 0
+    while True:
+        if bool(cfgvars.config["vm_auto_suspend"]):
+            vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
+            process = subprocess.check_output(["ps", "auxfww"])
+            # Check if any cassowary started freerdp process is running or not
+            print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
+            if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
+                last_active_on = int(time.time())  # Process exists, set last active to current time and do nothing else
+            elif int(time.time()) - last_active_on > cfgvars.config["vm_suspend_delay"] \
+                        and not os.path.isfile(vm_suspend_file):
+                # No cassowary process is running. The VM was relaunched (cassowary should remove this file if any app
+                # are run through it), and inactivity time is >= required, so put it to sleep
+                logger.debug("Suspending VM due to inactivity !")
+                process = subprocess.check_output(["virsh", "suspend", cfgvars.config["vm_name"]])
+                logger.debug("VM suspended due to inactivity: "+process.decode())
+                # We also Checked if the vm suspend file exists, if it exists that means we previously suspended VM due to
+                # inactivity and vm was not resumed by cassowary ! As user may be using VM directly through virt-manager
+                # , which we don't want to suspend that session, next suspension happens after next cassowary usage
+                logger.debug("Creating suspension marker file")
+                open(vm_suspend_file, "w").write("vm-suspended-at-"+str(time.time()))
+            # Else, either the VM was suspended and no cassowary application has been launched since then, or we do not
+            # have required inactivity duration, do nothing just wait
+        time.sleep(2)
+        if tc >= 10:
+            tc = 0
+            logger.debug("Refreshing config to update to probable config changes !")
+            cfgvars.refresh_config()
+    logger.debug("VM watcher has exited  !")

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>195</height>
+    <width>243</width>
+    <height>191</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,35 +15,19 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="text">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Share new drive from windows to linux</string>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>90</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="lb_info">
+        <property name="maximumSize">
+         <size>
+          <width>147</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Drive Letter to share:</string>
         </property>
@@ -202,7 +186,7 @@
       <item>
        <widget class="QPushButton" name="btn_createshare">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 85, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Share</string>
@@ -212,7 +196,7 @@
       <item>
        <widget class="QPushButton" name="btn_cancel">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(85, 0, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Cancel</string>

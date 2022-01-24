@@ -6,15 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>562</width>
-    <height>720</height>
+    <width>600</width>
+    <height>615</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>615</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Cassowary configuration (Linux)</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="desktop"/>
+   <iconset theme="desktop">
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -30,10 +37,16 @@
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>530</width>
-            <height>372</height>
+            <height>270</height>
            </size>
           </property>
           <property name="title">
@@ -43,7 +56,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>210</y>
+             <y>130</y>
              <width>171</width>
              <height>17</height>
             </rect>
@@ -56,7 +69,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>250</y>
+             <y>170</y>
              <width>171</width>
              <height>17</height>
             </rect>
@@ -69,7 +82,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>290</y>
+             <y>210</y>
              <width>171</width>
              <height>17</height>
             </rect>
@@ -82,7 +95,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>70</y>
+             <y>50</y>
              <width>111</width>
              <height>17</height>
             </rect>
@@ -95,7 +108,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>110</y>
+             <y>90</y>
              <width>171</width>
              <height>17</height>
             </rect>
@@ -107,8 +120,8 @@
           <widget class="QPushButton" name="btn_ipautodetect">
            <property name="geometry">
             <rect>
-             <x>410</x>
-             <y>100</y>
+             <x>460</x>
+             <y>80</y>
              <width>101</width>
              <height>39</height>
             </rect>
@@ -120,9 +133,9 @@
           <widget class="QLineEdit" name="inp_hostname">
            <property name="geometry">
             <rect>
-             <x>190</x>
-             <y>200</y>
-             <width>321</width>
+             <x>200</x>
+             <y>120</y>
+             <width>361</width>
              <height>39</height>
             </rect>
            </property>
@@ -136,9 +149,9 @@
           <widget class="QLineEdit" name="inp_username">
            <property name="geometry">
             <rect>
-             <x>190</x>
-             <y>240</y>
-             <width>151</width>
+             <x>200</x>
+             <y>160</y>
+             <width>211</width>
              <height>39</height>
             </rect>
            </property>
@@ -152,9 +165,9 @@
           <widget class="QLineEdit" name="inp_password">
            <property name="geometry">
             <rect>
-             <x>190</x>
-             <y>280</y>
-             <width>321</width>
+             <x>200</x>
+             <y>200</y>
+             <width>361</width>
              <height>39</height>
             </rect>
            </property>
@@ -174,9 +187,9 @@
           <widget class="QLineEdit" name="inp_vmname">
            <property name="geometry">
             <rect>
-             <x>190</x>
-             <y>60</y>
-             <width>321</width>
+             <x>200</x>
+             <y>40</y>
+             <width>361</width>
              <height>39</height>
             </rect>
            </property>
@@ -190,9 +203,9 @@
           <widget class="QLineEdit" name="inp_vmip">
            <property name="geometry">
             <rect>
-             <x>190</x>
-             <y>100</y>
-             <width>211</width>
+             <x>200</x>
+             <y>80</y>
+             <width>261</width>
              <height>39</height>
             </rect>
            </property>
@@ -200,97 +213,20 @@
             <string/>
            </property>
            <property name="placeholderText">
-            <string>192.xx... (Autodect works on virt manager)</string>
-           </property>
-          </widget>
-          <widget class="QLabel" name="lb_mountroot">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>150</y>
-             <width>171</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Win Share mount root</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="inp_mountroot">
-           <property name="geometry">
-            <rect>
-             <x>190</x>
-             <y>140</y>
-             <width>271</width>
-             <height>39</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="placeholderText">
-            <string>/mnt/casualmount (No '/' at last)</string>
+            <string>192.xx... (Autodetect works for libvirt only)</string>
            </property>
           </widget>
           <widget class="QPushButton" name="btn_autofill">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>240</y>
-             <width>171</width>
+             <x>410</x>
+             <y>160</y>
+             <width>151</width>
              <height>39</height>
             </rect>
            </property>
            <property name="text">
             <string>Autofill host/username</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="btn_choosemountroot">
-           <property name="geometry">
-            <rect>
-             <x>470</x>
-             <y>140</y>
-             <width>41</width>
-             <height>39</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>:</string>
-           </property>
-          </widget>
-          <widget class="QLabel" name="lp_term">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>330</y>
-             <width>171</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Default Terminal</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="inp_defterm">
-           <property name="geometry">
-            <rect>
-             <x>190</x>
-             <y>320</y>
-             <width>321</width>
-             <height>39</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="placeholderText">
-            <string>xterm</string>
-           </property>
-           <property name="cursorMoveStyle">
-            <enum>Qt::LogicalMoveStyle</enum>
-           </property>
-           <property name="clearButtonEnabled">
-            <bool>true</bool>
            </property>
           </widget>
          </widget>
@@ -311,7 +247,7 @@
             <rect>
              <x>180</x>
              <y>40</y>
-             <width>331</width>
+             <width>371</width>
              <height>39</height>
             </rect>
            </property>
@@ -376,7 +312,7 @@
             <rect>
              <x>190</x>
              <y>90</y>
-             <width>261</width>
+             <width>301</width>
              <height>20</height>
             </rect>
            </property>
@@ -399,7 +335,7 @@
           <widget class="QLabel" name="lbl_rdpscalevalue">
            <property name="geometry">
             <rect>
-             <x>470</x>
+             <x>510</x>
              <y>90</y>
              <width>31</width>
              <height>17</height>
@@ -798,9 +734,9 @@
           <widget class="QPushButton" name="btn_killfreerdp">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>30</y>
-             <width>141</width>
+             <x>390</x>
+             <y>20</y>
+             <width>171</width>
              <height>39</height>
             </rect>
            </property>
@@ -812,8 +748,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>40</y>
-             <width>241</width>
+             <y>30</y>
+             <width>361</width>
              <height>17</height>
             </rect>
            </property>
@@ -825,8 +761,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>90</y>
-             <width>201</width>
+             <y>70</y>
+             <width>361</width>
              <height>17</height>
             </rect>
            </property>
@@ -837,9 +773,9 @@
           <widget class="QPushButton" name="btn_fullrdp">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>80</y>
-             <width>141</width>
+             <x>390</x>
+             <y>60</y>
+             <width>171</width>
              <height>39</height>
             </rect>
            </property>
@@ -851,8 +787,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>140</y>
-             <width>141</width>
+             <y>110</y>
+             <width>361</width>
              <height>17</height>
             </rect>
            </property>
@@ -863,9 +799,9 @@
           <widget class="QPushButton" name="btn_restart">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>130</y>
-             <width>141</width>
+             <x>390</x>
+             <y>100</y>
+             <width>171</width>
              <height>39</height>
             </rect>
            </property>
@@ -877,8 +813,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>290</y>
-             <width>141</width>
+             <y>230</y>
+             <width>361</width>
              <height>17</height>
             </rect>
            </property>
@@ -889,9 +825,9 @@
           <widget class="QPushButton" name="btn_closesessions">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>280</y>
-             <width>141</width>
+             <x>390</x>
+             <y>220</y>
+             <width>171</width>
              <height>41</height>
             </rect>
            </property>
@@ -902,9 +838,9 @@
           <widget class="QPushButton" name="btn_serverstop">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>230</y>
-             <width>141</width>
+             <x>390</x>
+             <y>180</y>
+             <width>171</width>
              <height>41</height>
             </rect>
            </property>
@@ -916,8 +852,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>240</y>
-             <width>141</width>
+             <y>190</y>
+             <width>371</width>
              <height>17</height>
             </rect>
            </property>
@@ -928,17 +864,15 @@
           <widget class="QLabel" name="label_7">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>520</y>
-             <width>481</width>
-             <height>81</height>
+             <x>20</x>
+             <y>460</y>
+             <width>521</width>
+             <height>41</height>
             </rect>
            </property>
            <property name="text">
-            <string>Only use apps from Store in full RDP session if possible, 
- App like Windows 10's Photoviewer will generate a lot of glitches. So, 
- Associate jpeg,png,bmp files to linux using launch on host tab 
- Office, Photoshop and some other apps can me used without any issue</string>
+            <string>Use apps from Windows Store only in full RDP session if possible, 
+App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -947,9 +881,9 @@
           <widget class="QPushButton" name="btn_vmoff">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>180</y>
-             <width>141</width>
+             <x>390</x>
+             <y>140</y>
+             <width>171</width>
              <height>39</height>
             </rect>
            </property>
@@ -961,8 +895,8 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>190</y>
-             <width>141</width>
+             <y>150</y>
+             <width>361</width>
              <height>17</height>
             </rect>
            </property>
@@ -974,7 +908,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>340</y>
+             <y>270</y>
              <width>261</width>
              <height>17</height>
             </rect>
@@ -986,9 +920,9 @@
           <widget class="QPushButton" name="btn_setupautostart">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>330</y>
-             <width>141</width>
+             <x>390</x>
+             <y>260</y>
+             <width>171</width>
              <height>41</height>
             </rect>
            </property>
@@ -1000,7 +934,7 @@
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>390</y>
+             <y>320</y>
              <width>261</width>
              <height>17</height>
             </rect>
@@ -1012,9 +946,9 @@
           <widget class="QPushButton" name="btn_createdesktop">
            <property name="geometry">
             <rect>
-             <x>340</x>
-             <y>380</y>
-             <width>141</width>
+             <x>390</x>
+             <y>300</y>
+             <width>171</width>
              <height>41</height>
             </rect>
            </property>
@@ -1022,6 +956,231 @@
             <string>Create</string>
            </property>
           </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_advanced">
+       <attribute name="title">
+        <string>Advanced</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
+         <widget class="QFrame" name="frame_3">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <widget class="QLabel" name="lb_mountroot">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>20</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Windows Share mount root</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btn_choosemountroot">
+           <property name="geometry">
+            <rect>
+             <x>520</x>
+             <y>10</y>
+             <width>41</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="inp_mountroot">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>10</y>
+             <width>221</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>/mnt/casualmount (No '/' at last)</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="inp_defterm">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>50</y>
+             <width>271</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>xterm</string>
+           </property>
+           <property name="cursorMoveStyle">
+            <enum>Qt::LogicalMoveStyle</enum>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lp_term">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>60</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Default Terminal</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lp_term_2">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>100</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>RDP client for Full Session</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="inp_fullrdc">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>90</y>
+             <width>271</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>xfreerdp</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>wlfreerdp</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QComboBox" name="inp_apprdc">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>130</y>
+             <width>271</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>xfreerdp</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>wlfreerdp</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QLabel" name="lp_term_3">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>140</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>RDP client for App Session</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lp_term_4">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>180</y>
+             <width>251</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Seconds of inactivity beforesuspending VM</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lp_term_5">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>220</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable VM suspend on inactivity</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="inp_enbsuspend">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>215</y>
+             <width>251</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="inp_sleepd">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>170</y>
+             <width>271</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::PlusMinus</enum>
+           </property>
+           <property name="minimum">
+            <number>300</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_savegconf_2">
+          <property name="text">
+           <string>Save changes</string>
+          </property>
          </widget>
         </item>
        </layout>

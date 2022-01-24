@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>594</width>
-    <height>300</height>
+    <width>463</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,34 +15,24 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="maximumSize">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
       <size>
-       <width>16777215</width>
-       <height>30</height>
+       <width>451</width>
+       <height>191</height>
       </size>
      </property>
-     <property name="text">
+     <property name="title">
       <string>Share new drive from Linux to Windows</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="lb_localpath">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>20</y>
+        <x>20</x>
+        <y>50</y>
         <width>111</width>
         <height>17</height>
        </rect>
@@ -51,24 +41,21 @@
        <string>Local Path</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_3">
+     <widget class="QLineEdit" name="inp_localpath">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>100</y>
-        <width>111</width>
-        <height>17</height>
+        <x>160</x>
+        <y>40</y>
+        <width>211</width>
+        <height>39</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Drive Letter:</string>
-      </property>
      </widget>
-     <widget class="QLabel" name="label_4">
+     <widget class="QLabel" name="lb_sharename">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>60</y>
+        <x>20</x>
+        <y>90</y>
         <width>111</width>
         <height>17</height>
        </rect>
@@ -77,30 +64,44 @@
        <string>Share Name</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="inp_driveletter">
+     <widget class="QLineEdit" name="inp_sharename">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>90</y>
-        <width>226</width>
+        <x>160</x>
+        <y>80</y>
+        <width>251</width>
         <height>39</height>
        </rect>
       </property>
-      <item>
-       <property name="text">
-        <string>A</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>B</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>C</string>
-       </property>
-      </item>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lb_driveletter">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>130</y>
+        <width>111</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Drive Letter:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="inp_driveletter">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>120</y>
+        <width>251</width>
+        <height>39</height>
+       </rect>
+      </property>
       <item>
        <property name="text">
         <string>D</string>
@@ -212,37 +213,11 @@
        </property>
       </item>
      </widget>
-     <widget class="QLineEdit" name="inp_sharename">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>50</y>
-        <width>431</width>
-        <height>39</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="inp_localpath">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>10</y>
-        <width>391</width>
-        <height>39</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QPushButton" name="btn_browse">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>10</y>
+        <x>370</x>
+        <y>40</y>
         <width>41</width>
         <height>39</height>
        </rect>
@@ -271,7 +246,7 @@
       <item>
        <widget class="QPushButton" name="btn_create">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 85, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Create Map</string>
@@ -281,7 +256,7 @@
       <item>
        <widget class="QPushButton" name="btn_cancel">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(85, 0, 0);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Cancel</string>

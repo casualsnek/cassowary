@@ -5,18 +5,37 @@ import sys
 import traceback
 import time
 from .base.log import get_logger
-from .base.helper import path_translate_to_guest
+from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp
 from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
 from .gui.components.main_ui import MainWindow
 from .client import Client
+import threading
+
 
 
 def main():
     logger = get_logger(__name__)
     cfgvars.app_root = os.path.dirname(os.path.realpath(__file__))
 
+    def vm_wake():
+        vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
+        vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
+        if "paused" in vms.decode():
+            logger.debug("VM was suspended.. Resuming it")
+            subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
+            if os.path.isfile(vm_suspend_file):
+                logger.debug("Found suspend state file... VM was auto suspended previously, clearing it for next session")
+                os.remove(vm_suspend_file)
+                logger.debug("Added 2 sec delay for VM networking to be active !")
+                time.sleep(2)
+        else:
+            logger.debug("VM is not suspended.. ")
+
     def start_bg_client(reconnect=True):
+        vm_watcher = threading.Thread(target=vm_suspension_handler)
+        vm_watcher.daemon = True
+        vm_watcher.start()
         while True:
             try:
                 logger.info("Connecting to server....")
@@ -56,7 +75,7 @@ def main():
     #####################################################################################
     #  cassowary Client Application (Linux) - Integrate Windows VM with linux hosts     #
     # ---------------------------- Software info ---------------------------------------#
-    #      Version     : 0.2A                                                           #
+    #      Version     : 0.3A                                                           #
     #      GitHub      : https://github.com/casualsnek/cassowary                        # 
     #      License     : GPLv2                                                          #
     #      Maintainer  : @casualsnek (Github)                                           #
@@ -99,7 +118,7 @@ def main():
                         Usage   :
                                 cassowary -c path-map -- /home/user/document/personal.docx
     """
-    BASE_RDP_CMD = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,/ ' \
+    BASE_RDP_CMD = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,/ ' \
                    '+decorations /cert-ignore /audio-mode:1 /scale:{scale} /dynamic-resolution /{mflag} {rdflag} ' \
                    '/wm-class:"{wmclass}" ' \
                    '/app:"{execu}" /app-icon:"{icon}" '
@@ -110,6 +129,7 @@ def main():
     parser.add_argument('-a', '--gui-application', dest='guiapp',
                         help='Launch cassowary Configuration GUI',
                         action='store_true')
+    parser.add_argument('-f', '--full-session', dest='fullsession', help='Launches full rdp session', action='store_true')
     parser.add_argument('-np', '--no-polkit', dest='nopkexec', help='Prints messages in console, uses xterm with sudo'
                                                                     'instead of polkit pkexec for root access',
                         action='store_true')
@@ -132,11 +152,14 @@ def main():
         os.environ["DIALOG_MODE"] = "console"
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
-        exit(1)
+        sys.exit(1)
     if args.command_help:
         print(about + "\n" + action_help)
     if args.bgc:
         start_bg_client()
+    if args.fullsession:
+        full_rdp()
+        sys.exit(0)
     if args.guiapp:
         logger.debug("Starting configuration GUI")
         app = QApplication(sys.argv)
@@ -171,6 +194,7 @@ def main():
                                               passd=cfgvars.config["winvm_password"],
                                               ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
                                               mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
+                                              rdc=cfgvars.config["app_session_client"],
                                               execu=args.cmdline[0], icon=icon)
 
                     if len(translated_paths) > 1:
@@ -188,6 +212,7 @@ def main():
                         cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
                     #cmd = cmd + " 1> /dev/null 2>&1 &"
                     print("Commandline: {}".format(cmd))
+                    logger.debug("guest-run with commandline: "+cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
                 elif args.command == "guest-open":
@@ -202,9 +227,11 @@ def main():
                                               passd=cfgvars.config["winvm_password"],
                                               ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
                                               mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
+                                              rdc=cfgvars.config["app_session_client"],
                                               execu="cmd.exe", icon=icon)
                     cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
                     print("Commandline: {}".format(cmd))
+                    logger.debug("guest-open with commandline: " + cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
                 elif args.command == "raw-cmd":

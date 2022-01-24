@@ -3,7 +3,8 @@ import socket
 from PyQt5.QtWidgets import *
 from cassowary.base.functions import *
 from cassowary.base.log import get_logger
-from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name
+from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name, \
+    full_rdp
 from .minidialog import MiniDialog
 from .sharesandmaps import AddMapDialog, AddShareDialog
 from .desktopitemdialog import DesktopItemDialog
@@ -34,6 +35,7 @@ class MainWindow(QMainWindow):
         # Add events to button clicks
         self.inp_password.setEchoMode(QLineEdit.Password)
         self.btn_savegconf.clicked.connect(self.__save_vminfo)
+        self.btn_savegconf_2.clicked.connect(self.__save_vminfo) # Advanced and vminfo buttons are same
         self.btn_newmap.clicked.connect(lambda: self.new_map_dialog.run(self.client, self.populate_mappings))
         self.btn_newshare.clicked.connect(lambda: self.new_share_dialog.run(self.client, self.populate_shares))
         self.btn_mountall.clicked.connect(mount_pending)
@@ -45,7 +47,7 @@ class MainWindow(QMainWindow):
         self.btn_reconnect.clicked.connect(lambda: self.__reconnect())
         self.btn_autofill.clicked.connect(self.__fill_basic_info)
         self.btn_killfreerdp.clicked.connect(lambda: os.popen("killall xfreerdp & killall wlfreerdp"))
-        self.btn_fullrdp.clicked.connect(self.__full_rdp)
+        self.btn_fullrdp.clicked.connect(full_rdp)
         self.btn_restart.clicked.connect(lambda: os.popen("virsh reset {}".format(cfgvars.config["vm_name"])))
         self.btn_vmoff.clicked.connect(lambda: os.popen("virsh poweroff {}".format(cfgvars.config["vm_name"])))
         self.btn_closesessions.clicked.connect(lambda: self.client.send_wait_response(["close-sessions"], timeout=4))
@@ -107,23 +109,6 @@ Version=1.0
         with open(os.path.join(app_dir, "cassowary_linux.desktop"), "w") as df:
             df.write(desktop_item)
         self.dialog.run("Application menu item created for current user !")
-
-    @staticmethod
-    def __full_rdp():
-        command = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,/ +auto-reconnect +clipboard '\
-                  '/cert-ignore /audio-mode:1 /scale:{scale} /dynamic-resolution /{mflag} {rdflag} 1> /dev/null 2>&1 &'
-        multimon_enable = int(os.environ.get("RDP_MULTIMON", cfgvars.config["rdp_multimon"]))
-        cmd_final = command.format(
-            rdflag=cfgvars.config["rdp_flags"],
-            domain=cfgvars.config["winvm_hostname"],
-            user=cfgvars.config["winvm_username"],
-            passd=cfgvars.config["winvm_password"],
-            ip=cfgvars.config["host"],
-            scale=cfgvars.config["rdp_scale"],
-            mflag="multimon" if multimon_enable else "span"
-        )
-
-        os.popen("sh -c '{}' &".format(cmd_final))
 
     def __apply_table_props(self):
         tbl_map_header = self.tbl_maps.horizontalHeader()
@@ -263,6 +248,11 @@ Version=1.0
         cfgvars.config["rdp_flags"] = self.inp_rdpflags.text()
         cfgvars.config["term"] = self.inp_defterm.text()
         cfgvars.config["winshare_mount_root"] = self.inp_mountroot.text()
+        cfgvars.config["vm_suspend_delay"] = self.inp_sleepd.value()
+        cfgvars.config["vm_auto_suspend"] = 1 if self.inp_enbsuspend.isChecked() else 0
+        cfgvars.config["app_session_client"] = self.inp_apprdc.currentText()
+        cfgvars.config["full_session_client"] = self.inp_fullrdc.currentText()
+
         cfgvars.save_config()
         self.dialog.run("General settings updated !")
 
@@ -275,6 +265,10 @@ Version=1.0
         self.inp_defterm.setText(cfgvars.config["term"])
         self.inp_mountroot.setText(cfgvars.config["winshare_mount_root"])
         self.inp_rdpflags.setText(cfgvars.config["rdp_flags"])
+        self.inp_fullrdc.setCurrentText(cfgvars.config["full_session_client"])
+        self.inp_apprdc.setCurrentText(cfgvars.config["app_session_client"])
+        self.inp_sleepd.setValue(cfgvars.config["vm_suspend_delay"])
+        self.inp_enbsuspend.setChecked(bool(cfgvars.config["vm_auto_suspend"]))
         self.inp_rdpscale.setValue({100: 0, 140: 1, 180: 2}[cfgvars.config["rdp_scale"]])
         self.inp_rdpmultimon.setChecked(bool(cfgvars.config["rdp_multimon"]))
 
