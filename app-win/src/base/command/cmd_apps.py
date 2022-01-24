@@ -54,7 +54,7 @@ class ApplicationData:
             except FileNotFoundError:
                 # If the Key does not exist instead of throwing an exception safely ignore it
                 pass
-            # Open the directories on App Path -Accessing requires defined integer, so we loop Until we get WinError 259
+            # Open the directories on App Path -Accessing requires a defined integer, so we loop Until we get WinError 259
             for n in range(1000):
                 try:
                     app_entry = winreg.OpenKey(app_path_key, winreg.EnumKey(app_path_key, n))
@@ -63,9 +63,9 @@ class ApplicationData:
                     if path not in applications:
                         applications.append(path)
                 except Exception as e:
-                    if str(e) == "[WinError 259]":
+                    if "[WinError 259]" in str(e):
                         break
-                    elif str(e) == "[WinError 2]":
+                    elif "[WinError 2]" in str(e):
                         pass
                     else:
                         logger.error("Exception while scanning for apps ! : "+traceback.format_exc())
