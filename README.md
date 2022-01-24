@@ -15,7 +15,7 @@ Give a star ⭐ or follow if you find this project useful
  - Easily accessing guest filesystem from host
  - Easily access host filesystem from windows
  - Easy to use configuration utility
-- Creating application launcher for windows application easily
+ - Creating application launcher for windows application easily
 
 ## This README consists of instructions for:
 1. [Setting up Windows VM with virt-manager](docs/1-virt-manager.md)
@@ -25,13 +25,14 @@ Give a star ⭐ or follow if you find this project useful
 5. How can i help?
 
 # 4. Building cassowary from source
-Install wine first in order to build windows application on linux, internet is required to download python binary for setup 
+Install [wine](https://wiki.winehq.org/Download) first in order to build windows application on linux, internet is required to download python binary for setup 
 
 ```
-$ git clone https:// github.com/casualsnek/cassowary
+$ git clone https://github.com/casualsnek/cassowary
 $ cd cassowary
 $ ./buildall.sh
 ```
+If `buildall.sh` produces error such as `bash: ./buildall.sh: Permission denied`, run this command `chmod +x buildall.sh` and run `./buildall.sh` again.
 
 This will result a dist folder inside app-linux which contains the installed wheel file
 also a bin folder will be created in app-windows containing the setup files
