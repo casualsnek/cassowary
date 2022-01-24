@@ -36,7 +36,7 @@ To do this create the folder `~/.config/libvirt/` and inside this folder create 
 
 ```
 $ mkdir -p ~/.config/libvirt
-$ echo "uri_default = "qemu:///system"" >> ~/.config/libvirt/libvirt.conf
+$ echo "uri_default = \"qemu:///system\"" >> ~/.config/libvirt/libvirt.conf
 ```
 
 Now you will need to restart for all the changes to take place.
