@@ -230,7 +230,7 @@ def vm_suspension_handler():
             vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
             process = subprocess.check_output(["ps", "auxfww"])
             # Check if any cassowary started freerdp process is running or not
-            print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
+            # print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
             if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
                 last_active_on = int(time.time())  # Process exists, set last active to current time and do nothing else
             elif int(time.time()) - last_active_on > cfgvars.config["vm_suspend_delay"] \
