@@ -5,7 +5,7 @@ import sys
 import traceback
 import time
 from .base.log import get_logger
-from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp
+from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake
 from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
 from .gui.components.main_ui import MainWindow
@@ -17,20 +17,6 @@ import threading
 def main():
     logger = get_logger(__name__)
     cfgvars.app_root = os.path.dirname(os.path.realpath(__file__))
-
-    def vm_wake():
-        vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
-        vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
-        if "paused" in vms.decode():
-            logger.debug("VM was suspended.. Resuming it")
-            subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
-            if os.path.isfile(vm_suspend_file):
-                logger.debug("Found suspend state file... VM was auto suspended previously, clearing it for next session")
-                os.remove(vm_suspend_file)
-                logger.debug("Added 2 sec delay for VM networking to be active !")
-                time.sleep(2)
-        else:
-            logger.debug("VM is not suspended.. ")
 
     def start_bg_client(reconnect=True):
         vm_watcher = threading.Thread(target=vm_suspension_handler)
@@ -158,6 +144,7 @@ def main():
     if args.bgc:
         start_bg_client()
     if args.fullsession:
+        vm_wake()
         full_rdp()
         sys.exit(0)
     if args.guiapp:
@@ -211,7 +198,7 @@ def main():
                         #                      V        | ending quote
                         cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
                     #cmd = cmd + " 1> /dev/null 2>&1 &"
-                    print("Commandline: {}".format(cmd))
+                    vm_wake()
                     logger.debug("guest-run with commandline: "+cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
@@ -230,11 +217,12 @@ def main():
                                               rdc=cfgvars.config["app_session_client"],
                                               execu="cmd.exe", icon=icon)
                     cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
-                    print("Commandline: {}".format(cmd))
+                    vm_wake()
                     logger.debug("guest-open with commandline: " + cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
                 elif args.command == "raw-cmd":
+                    vm_wake()
                     client__ = Client(cfgvars.config["host"], cfgvars.config["port"])
                     client__.init_connection()
                     response = client__.send_wait_response(args.cmdline, timeout=10)
@@ -243,6 +231,5 @@ def main():
                     print("'{}' is not a supported command".format(args.command), "Unsupported command")
         except Exception as e:
             logger.error("Unexpected error: Exception: %s, Traceback : %s", str(e), traceback.format_exc())
-            print("Unexpected error.. Exiting")
             sys.exit(1)
     sys.exit(0)

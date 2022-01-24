@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from cassowary.base.functions import *
 from cassowary.base.log import get_logger
 from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name, \
-    full_rdp
+    full_rdp, vm_wake
 from .minidialog import MiniDialog
 from .sharesandmaps import AddMapDialog, AddShareDialog
 from .desktopitemdialog import DesktopItemDialog
@@ -148,7 +148,7 @@ Version=1.0
             self.dialog.run(data)
 
     def __reconnect(self, no_popup=False):
-
+        vm_wake()
         logger.debug("Tring to start a RDP session for server side component to start !")
         cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
               '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \

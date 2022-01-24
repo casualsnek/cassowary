@@ -253,3 +253,17 @@ def vm_suspension_handler():
             logger.debug("Refreshing config to update to probable config changes !")
             cfgvars.refresh_config()
     logger.debug("VM watcher has exited  !")
+
+def vm_wake():
+    vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
+    vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
+    if "paused" in vms.decode():
+        logger.debug("VM was suspended.. Resuming it")
+        subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
+        if os.path.isfile(vm_suspend_file):
+            logger.debug("Found suspend state file... VM was auto suspended previously, clearing it for next session")
+            os.remove(vm_suspend_file)
+            logger.debug("Added 2 sec delay for VM networking to be active !")
+            time.sleep(2)
+    else:
+        logger.debug("VM is not suspended.. ")
