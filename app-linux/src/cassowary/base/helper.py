@@ -226,7 +226,7 @@ def vm_suspension_handler():
     last_active_on = int(time.time()) # Should at least wait for one timeout
     tc = 0
     while True:
-        if bool(cfgvars.config["vm_auto_suspend"]):
+        if bool(cfgvars.config["vm_auto_suspend"]) and cfgvars.config["vm_name"].strip() != "":
             vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
             process = subprocess.check_output(["ps", "auxfww"])
             # Check if any cassowary started freerdp process is running or not
@@ -256,14 +256,21 @@ def vm_suspension_handler():
 
 def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
-    vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
-    if "paused" in vms.decode():
-        logger.debug("VM was suspended.. Resuming it")
-        subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
-        if os.path.isfile(vm_suspend_file):
-            logger.debug("Found suspend state file... VM was auto suspended previously, clearing it for next session")
-            os.remove(vm_suspend_file)
-            logger.debug("Added 2 sec delay for VM networking to be active !")
-            time.sleep(2)
+    if cfgvars.config["vm_name"].strip() != "":
+        try:
+            vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
+            if "paused" in vms.decode():
+                logger.debug("VM was suspended.. Resuming it")
+                subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
+                if os.path.isfile(vm_suspend_file):
+                    logger.debug(
+                        "Found suspend state file... VM was auto suspended previously, clearing it for next session")
+                    os.remove(vm_suspend_file)
+                    logger.debug("Added 2 sec delay for VM networking to be active !")
+                    time.sleep(2)
+            else:
+                logger.debug("VM is not suspended.. ")
+        except subprocess.CalledProcessError as e:
+            logger.log("Non 0 exit status returned by virsh.. Could not wake VM: "+str(e))
     else:
-        logger.debug("VM is not suspended.. ")
+        logger.debug("VM name is blank, maybe not a vm skipping vm wakeup process !")
