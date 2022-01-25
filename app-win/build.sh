@@ -6,7 +6,7 @@ download_python()
   if [ ! -f /tmp/pysetup.exe ]
   then
       echo "Downloading python"
-      wget https://www.python.org/ftp/python/3.9.6/python-3.9.6-amd64.exe -O /tmp/pyseup.exe
+      wget https://www.python.org/ftp/python/3.9.6/python-3.9.6-amd64.exe -O /tmp/pysetup.exe
   fi
   checksum="$(md5sum /tmp/pysetup.exe | awk '{ print $1 }')"
 }
