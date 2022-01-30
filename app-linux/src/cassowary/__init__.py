@@ -22,9 +22,9 @@ def main():
         vm_watcher = threading.Thread(target=vm_suspension_handler)
         vm_watcher.daemon = True
         vm_watcher.start()
+        logger.info("Connecting to server....")
         while True:
             try:
-                logger.info("Connecting to server....")
                 client_ = Client(cfgvars.config["host"], cfgvars.config["port"])
                 client_.init_connection()
                 client_.accepting_forwards = True
@@ -50,7 +50,7 @@ def main():
                 logger.info("Got keyboard interrupt.. Exiting")
                 break
             except Exception as e:
-                logger.error("Ignored exception: '%s', reconnecting to server after 5 seconds", str(e))
+                logger.error("Ignored exception: '%s', reconnecting to server after 5 seconds", traceback.format_exc())
             time.sleep(5)
             if not reconnect:
                 logger.warning("Reconnect is enabled, client is stopped")
