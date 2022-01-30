@@ -40,7 +40,6 @@ def main():
                         while True:
                             if not client_.sender.is_alive() or not client_.receiver.is_alive() or client_.stop_connecting:
                                 logger.info("Connection seems to be lost")
-                                print(client_.sender.is_alive(), client_.receiver.is_alive(), client_.stop_connecting)
                                 break
                             time.sleep(5)
                     logger.info(

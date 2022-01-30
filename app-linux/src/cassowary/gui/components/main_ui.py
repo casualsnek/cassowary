@@ -1,6 +1,8 @@
 import os.path
 import socket
-from PyQt5.QtWidgets import *
+import traceback
+
+from PyQt5.QtWidgets import QMainWindow, QHeaderView, QLineEdit, QFileDialog, QPushButton, QTableWidgetItem
 from cassowary.base.functions import *
 from cassowary.base.log import get_logger
 from cassowary.base.helper import replace_vars, get_windows_cifs_locations, mount_pending, unmount_all, ip_by_vm_name, \
@@ -148,6 +150,7 @@ Version=1.0
             self.dialog.run(data)
 
     def __reconnect(self, no_popup=False):
+        # Wake the VM if paused and wait for networking to be active !
         vm_wake()
         logger.debug("Tring to start a RDP session for server side component to start !")
         cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
@@ -173,8 +176,8 @@ Version=1.0
             self.dialog.run("Connection refused by server at '{}':{}".format(cfgvars.config["host"],
                                                                              cfgvars.config["port"]))
         except socket.timeout:
-            self.dialog.run("Timed out while connecting to server !\n Make sure server ip is correct and server"
-                            " application is running")
+            self.dialog.run("Timed out while connecting to server at {}:{}!\n Make sure server ip is correct and server"
+                            " application is running".format(cfgvars.config["host"], cfgvars.config["port"]))
         except Exception as e:
             self.dialog.run("Could not connect to server at: {}:{}  \n {}".format(cfgvars.config["host"],
                                                                                   cfgvars.config["port"],
@@ -243,6 +246,7 @@ Version=1.0
         cfgvars.config["winvm_password"] = self.inp_password.text()
         cfgvars.config["vm_name"] = self.inp_vmname.text()
         cfgvars.config["host"] = self.inp_vmip.text()
+        cfgvars.config["libvirt_uri"] = self.inp_libvirturi.text()
         cfgvars.config["rdp_scale"] = int(["100", "140", "180"][self.inp_rdpscale.value()])
         cfgvars.config["rdp_multimon"] = self.inp_rdpmultimon.checkState()
         cfgvars.config["rdp_flags"] = self.inp_rdpflags.text()
@@ -262,6 +266,7 @@ Version=1.0
         self.inp_password.setText(cfgvars.config["winvm_password"])
         self.inp_vmname.setText(cfgvars.config["vm_name"])
         self.inp_vmip.setText(cfgvars.config["host"])
+        self.inp_libvirturi.setText(cfgvars.config["libvirt_uri"])
         self.inp_defterm.setText(cfgvars.config["term"])
         self.inp_mountroot.setText(cfgvars.config["winshare_mount_root"])
         self.inp_rdpflags.setText(cfgvars.config["rdp_flags"])
@@ -336,29 +341,32 @@ Version=1.0
             while self.tbl_installedapps.rowCount() > 0:
                 self.tbl_installedapps.removeRow(0)
             for app in data:
-                name = app[0].split(":")[0]
-                desc = ""
-                version = app[2]
-                path = app[1]
-                parts = app[0].split(":")
-                for part in parts[1:len(parts)]:
-                    desc = desc + part + ":"
-                desc = desc[:-1]
+                try:
+                    name = app[0].split(":")[0]
+                    desc = ""
+                    version = app[2]
+                    path = app[1]
+                    parts = app[0].split(":")
+                    for part in parts[1:len(parts)]:
+                        desc = desc + part + ":"
+                    desc = desc[:-1]
 
-                # Add shortcut button on last column
-                btn = QPushButton(self.tbl_maps)
-                btn.setText(' Add ')
-                btn.clicked.connect(
-                    lambda x, a=name, b=desc, c=path, d=version: _add_btn_clicked(a, b, c, d)
-                )
-                btn.setMaximumWidth(70)
+                    # Add shortcut button on last column
+                    btn = QPushButton(self.tbl_maps)
+                    btn.setText(' Add ')
+                    btn.clicked.connect(
+                        lambda x, a=name, b=desc, c=path, d=version: _add_btn_clicked(a, b, c, d)
+                    )
+                    btn.setMaximumWidth(70)
 
-                # Fill the row
-                rows = self.tbl_installedapps.rowCount()
-                self.tbl_installedapps.insertRow(rows)
-                self.tbl_installedapps.setItem(rows, 0, QTableWidgetItem(name+" ("+path.split("\\")[-1]+")"))
-                self.tbl_installedapps.setItem(rows, 1, QTableWidgetItem(version))
-                self.tbl_installedapps.setCellWidget(rows, 2, btn)
+                    # Fill the row
+                    rows = self.tbl_installedapps.rowCount()
+                    self.tbl_installedapps.insertRow(rows)
+                    self.tbl_installedapps.setItem(rows, 0, QTableWidgetItem(name+" ("+path.split("\\")[-1]+")"))
+                    self.tbl_installedapps.setItem(rows, 1, QTableWidgetItem(version))
+                    self.tbl_installedapps.setCellWidget(rows, 2, btn)
+                except AttributeError:
+                    logger.warning("Looks like some app returned data that cannot be parsed : %s : %s", str(app), traceback.format_exc())
         else:
             self.dialog.run(data)
 

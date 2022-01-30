@@ -1037,7 +1037,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <bool>true</bool>
            </property>
           </widget>
-          <widget class="QLabel" name="lp_term">
+          <widget class="QLabel" name="lb_term">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -1050,7 +1050,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <string>Default Terminal</string>
            </property>
           </widget>
-          <widget class="QLabel" name="lp_term_2">
+          <widget class="QLabel" name="lb_funnsessionrdp">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -1103,7 +1103,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             </property>
            </item>
           </widget>
-          <widget class="QLabel" name="lp_term_3">
+          <widget class="QLabel" name="lb_appsessionrdp">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -1116,11 +1116,11 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <string>RDP client for App Session</string>
            </property>
           </widget>
-          <widget class="QLabel" name="lp_term_4">
+          <widget class="QLabel" name="lb_secondsbeforesus">
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>180</y>
+             <y>220</y>
              <width>251</width>
              <height>17</height>
             </rect>
@@ -1129,11 +1129,11 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <string>Seconds of inactivity beforesuspending VM</string>
            </property>
           </widget>
-          <widget class="QLabel" name="lp_term_5">
+          <widget class="QLabel" name="lb_enablesuspend">
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>220</y>
+             <y>260</y>
              <width>221</width>
              <height>17</height>
             </rect>
@@ -1146,7 +1146,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            <property name="geometry">
             <rect>
              <x>300</x>
-             <y>215</y>
+             <y>260</y>
              <width>251</width>
              <height>31</height>
             </rect>
@@ -1159,7 +1159,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            <property name="geometry">
             <rect>
              <x>290</x>
-             <y>170</y>
+             <y>210</y>
              <width>271</width>
              <height>39</height>
             </rect>
@@ -1168,10 +1168,45 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <enum>QAbstractSpinBox::PlusMinus</enum>
            </property>
            <property name="minimum">
-            <number>300</number>
+            <number>10</number>
            </property>
            <property name="maximum">
             <number>999999999</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lb_libvirturi">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>180</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>libvirt URI</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="inp_libvirturi">
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>170</y>
+             <width>271</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>qemu:///system</string>
+           </property>
+           <property name="placeholderText">
+            <string>qemu:///system</string>
+           </property>
+           <property name="cursorMoveStyle">
+            <enum>Qt::LogicalMoveStyle</enum>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>

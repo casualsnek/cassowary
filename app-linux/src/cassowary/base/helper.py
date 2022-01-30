@@ -2,10 +2,13 @@ import random
 import string
 import time
 import subprocess
+import traceback
+
 from .cfgvars import cfgvars
 from .log import get_logger
 import os
 import re
+import libvirt
 
 logger = get_logger(__name__)
 
@@ -23,19 +26,26 @@ def warn_dependencies():
 
 
 def ip_by_vm_name(name):
-    out = os.popen("virsh domifaddr {}".format(name)).read().strip().split("\n")
-    if out != [""]:
+    conn = libvirt.open(cfgvars.config["libvirt_uri"])
+    if conn is not None:
         try:
-            ip = out[2].strip().split()[3].split("/")[0]
-            return ip
-        except IndexError:
-            logger.debug("Vm exists but ip could not be fetched Maybe vm is running in user session"
-                         " which is not supported !. Vm name: %s", name)
-            return None
-
+            dom = conn.lookupByName(name)
+            interfaces = dom.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE)
+            if interfaces is not None:
+                for interface in interfaces:
+                    try:
+                        ip = interfaces[interface]["addrs"][0]["addr"]
+                        return ip
+                    except (KeyError, IndexError) as e:
+                        pass
+            else:
+                logger.error("Cannot get network interfaces for domain '%s' ", name)
+        except libvirt.libvirtError:
+            logger.error("Cannot get ip for '%s' -> %s", name, traceback.format_exc())
     else:
-        logger.debug("Cannot find vm by name using virsh. Vm name: %s", name)
-        return None
+        logger.error("Cannot connect to libvirt ! at '%s' ", cfgvars.config["libvirt_uri"])
+    logger.warning("Could not get proper ip address for domain '%s' ", name)
+    return None
 
 
 def replace_vars(inp_string):
@@ -225,26 +235,49 @@ def vm_suspension_handler():
     logger.debug("VM suspend on inactivity is "+"enabled" if bool(cfgvars.config["vm_auto_suspend"]) else "disabled")
     last_active_on = int(time.time()) # Should at least wait for one timeout
     tc = 0
+    vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
+    vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
     while True:
         if bool(cfgvars.config["vm_auto_suspend"]) and cfgvars.config["vm_name"].strip() != "":
-            vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
             process = subprocess.check_output(["ps", "auxfww"])
             # Check if any cassowary started freerdp process is running or not
             # print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
             if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
                 last_active_on = int(time.time())  # Process exists, set last active to current time and do nothing else
+                print("Process exists ! Doing nothing...")
             elif int(time.time()) - last_active_on > cfgvars.config["vm_suspend_delay"] \
                         and not os.path.isfile(vm_suspend_file):
+                bypass = False
                 # No cassowary process is running. The VM was relaunched (cassowary should remove this file if any app
                 # are run through it), and inactivity time is >= required, so put it to sleep
+                if os.path.isfile(vm_app_launch_marker):
+                    logger.debug("Found a app launch marker file")
+                    with open(vm_app_launch_marker, "r") as mf:
+                        last_proc_spawned_on = int(mf.read().strip())
+                    # If last process was created within last 10 seconds, do not suspend
+                    if int(time.time()) - last_proc_spawned_on < 10:
+                        bypass = True
+                        logger.debug("This vm suspend was cancelled as user attempted to launch app right now !")
+                    else:
+                        os.remove(vm_app_launch_marker) # Delete marker file older than 10 sec
                 logger.debug("Suspending VM due to inactivity !")
-                process = subprocess.check_output(["virsh", "suspend", cfgvars.config["vm_name"]])
-                logger.debug("VM suspended due to inactivity: "+process.decode())
+                conn = libvirt.open(cfgvars.config["libvirt_uri"])
+                if conn is not None and bypass is False:
+                    try:
+                        dom = conn.lookupByName(cfgvars.config["vm_name"])
+                        dom.suspend()
+                        logger.debug("VM '%s' suspended due to inactivity: ", cfgvars.config["vm_name"])
+                        logger.debug("Creating suspension marker file")
+                        open(vm_suspend_file, "w").write("vm-suspended-at-" + str(time.time()))
+                    except libvirt.libvirtError:
+                        logger.error("Could not suspend vm '%s' -> %s", cfgvars.config["vm_name"],
+                                     traceback.format_exc())
+                else:
+                    if conn is not None:
+                        logger.error("Cannot connect to libvirt ! at '%s'", cfgvars.config["libvirt_uri"])
                 # We also Checked if the vm suspend file exists, if it exists that means we previously suspended VM due to
                 # inactivity and vm was not resumed by cassowary ! As user may be using VM directly through virt-manager
                 # , which we don't want to suspend that session, next suspension happens after next cassowary usage
-                logger.debug("Creating suspension marker file")
-                open(vm_suspend_file, "w").write("vm-suspended-at-"+str(time.time()))
             # Else, either the VM was suspended and no cassowary application has been launched since then, or we do not
             # have required inactivity duration, do nothing just wait
         time.sleep(2)
@@ -252,25 +285,41 @@ def vm_suspension_handler():
             tc = 0
             logger.debug("Refreshing config to update to probable config changes !")
             cfgvars.refresh_config()
-    logger.debug("VM watcher has exited  !")
 
 def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
+    vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
+    logger.debug("Attempting to resume VM")
+    # If VM name is not set it may be windows instanced elsewhere which we cannot pause or resume !
+    # Since this function will be called everytime an cassowary application is launched,
+    # Add a file with timestamp for notifying vm_suspension_handler from background client that an app was launched just
+    # now so delay suspend by few seconds while the application process is created !
+    with open(vm_app_launch_marker, "w") as mf:
+        mf.write(str(int(time.time())))
     if cfgvars.config["vm_name"].strip() != "":
-        try:
-            vms = subprocess.check_output(["virsh", "domstate", cfgvars.config["vm_name"]])
-            if "paused" in vms.decode():
-                logger.debug("VM was suspended.. Resuming it")
-                subprocess.check_output(["virsh", "resume", cfgvars.config["vm_name"]])
-                if os.path.isfile(vm_suspend_file):
-                    logger.debug(
-                        "Found suspend state file... VM was auto suspended previously, clearing it for next session")
-                    os.remove(vm_suspend_file)
+        conn = libvirt.open(cfgvars.config["libvirt_uri"])
+        if conn is not None:
+            try:
+                dom = conn.lookupByName(cfgvars.config["vm_name"])
+                if dom.info()[0] == 3:
+                    logger.debug("VM was suspended.. Resuming it")
+                    dom.resume()
+                    logger.debug("VM resumed..")
+                    if os.path.isfile(vm_suspend_file):
+                        logger.debug(
+                            "Found suspend state file... VM was auto suspended previously, clearing it for next session")
+                        os.remove(vm_suspend_file)
                     logger.debug("Added 2 sec delay for VM networking to be active !")
                     time.sleep(2)
-            else:
-                logger.debug("VM is not suspended.. ")
-        except subprocess.CalledProcessError as e:
-            logger.log("Non 0 exit status returned by virsh.. Could not wake VM: "+str(e))
+                else:
+                    logger.warning("VM state is not set to suspended : State -> '%s' ", str(dom.info()[0]))
+            except libvirt.libvirtError:
+                logger.error("Could not suspend vm '%s' -> %s", cfgvars.config["vm_name"],
+                             traceback.format_exc())
+        else:
+            logger.error("Cannot connect to libvirt ! at '%s'", cfgvars.config["libvirt_uri"])
     else:
-        logger.debug("VM name is blank, maybe not a vm skipping vm wakeup process !")
+        logger.debug("VM name is blank, maybe not a vm skipping vm resume process !")
+
+# Note: VM suspend file is for preventing suspending vm sessions manually started by user without using cassowary
+#        App launcher marker file is prevent vm from suspending right before an app is launched !

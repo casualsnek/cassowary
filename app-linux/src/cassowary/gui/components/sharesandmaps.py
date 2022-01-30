@@ -21,7 +21,7 @@ class AddMapDialog(QDialog):
         self.dialog = MiniDialog(self)
 
     def run(self, client, on_success=None):
-        self.btn_create.clicked.connect(lambda : self.__add_clicked(client, on_success))
+        self.btn_create.clicked.connect(lambda: self.__add_clicked(client, on_success))
         self.exec_()
 
     def __select_dir(self):
