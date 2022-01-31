@@ -1134,7 +1134,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <rect>
              <x>20</x>
              <y>260</y>
-             <width>221</width>
+             <width>271</width>
              <height>17</height>
             </rect>
            </property>
@@ -1146,9 +1146,9 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            <property name="geometry">
             <rect>
              <x>300</x>
-             <y>260</y>
+             <y>261</y>
              <width>251</width>
-             <height>31</height>
+             <height>20</height>
             </rect>
            </property>
            <property name="text">
@@ -1168,7 +1168,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <enum>QAbstractSpinBox::PlusMinus</enum>
            </property>
            <property name="minimum">
-            <number>10</number>
+            <number>4</number>
            </property>
            <property name="maximum">
             <number>999999999</number>
@@ -1207,6 +1207,32 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            </property>
            <property name="clearButtonEnabled">
             <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="inp_susnotif">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>301</y>
+             <width>251</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lb_enablesuspend_notig">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>300</y>
+             <width>281</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Send notification when VM suspends</string>
            </property>
           </widget>
          </widget>

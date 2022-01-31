@@ -3,7 +3,6 @@ import string
 import time
 import subprocess
 import traceback
-
 from .cfgvars import cfgvars
 from .log import get_logger
 import os
@@ -268,7 +267,13 @@ def vm_suspension_handler():
                         dom.suspend()
                         logger.debug("VM '%s' suspended due to inactivity: ", cfgvars.config["vm_name"])
                         logger.debug("Creating suspension marker file")
-                        open(vm_suspend_file, "w").write("vm-suspended-at-" + str(time.time()))
+                        open(vm_suspend_file, "w").write(str(time.time()))
+                        if cfgvars.config["send_suspend_notif"]:
+                            os.system('notify-send -u normal --icon \'{icon}\' --app-name Cassowary "VM suspended"'
+                                      ' "The VM \'{vm}\' has been suspended due to {delay} seconds of inactivity !"'.format(
+                                icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gui/extrares/cassowary.png"),
+                                vm=cfgvars.config["vm_name"], delay=cfgvars.config["vm_suspend_delay"]
+                            ))
                     except libvirt.libvirtError:
                         logger.error("Could not suspend vm '%s' -> %s", cfgvars.config["vm_name"],
                                      traceback.format_exc())
@@ -278,6 +283,10 @@ def vm_suspension_handler():
                 # We also Checked if the vm suspend file exists, if it exists that means we previously suspended VM due to
                 # inactivity and vm was not resumed by cassowary ! As user may be using VM directly through virt-manager
                 # , which we don't want to suspend that session, next suspension happens after next cassowary usage
+            else:
+                print("Last app launched :", int(time.time()) - last_active_on, " ago, Required : ",
+                      cfgvars.config["vm_suspend_delay"], " for suspending. Already suspended: ",
+                      os.path.isfile(vm_suspend_file))
             # Else, either the VM was suspended and no cassowary application has been launched since then, or we do not
             # have required inactivity duration, do nothing just wait
         time.sleep(2)
@@ -293,7 +302,7 @@ def fix_black_window(forced=False):
         logger.debug("Opening & closing a test window to trigger login or try to fix black screen bug on first launch")
         cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
               '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \
-              '/wm-class:"cassowaryApp-echo" /app:"cmd.exe"'.format(domain=cfgvars.config["winvm_hostname"],
+              '/wm-class:"cassowaryApp-echo" /app:"ipconfig"'.format(domain=cfgvars.config["winvm_hostname"],
                                                                     user=cfgvars.config["winvm_username"],
                                                                     passd=cfgvars.config["winvm_password"],
                                                                     ip=cfgvars.config["host"]
@@ -302,14 +311,16 @@ def fix_black_window(forced=False):
         ts = int(time.time())
         while process.poll() is None:
             for line in process.stdout:
-                if "xf_lock_x11" in line or int(time.time()) - ts > 10:
+                if "xf_lock_x11" in line.decode() or int(time.time()) - ts > 10:
                     open(first_launch_track, "w").write(str(int(time.time())))
                     logger.debug("Created a marker -> One session done")
                     # Create file to remember that one session was already done
+                    time.sleep(2)
                     process.kill()
+                    break
     logger.debug("An app was already opened, the black window should not appear now !")
 
-def vm_wake():
+def vm_wake(session_create_forced=False):
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
     vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
     logger.debug("Attempting to resume VM")
@@ -334,6 +345,7 @@ def vm_wake():
                         os.remove(vm_suspend_file)
                     logger.debug("Added 2 sec delay for VM networking to be active !")
                     time.sleep(2)
+                    fix_black_window(forced=True)
                 else:
                     logger.warning("VM state is not set to suspended : State -> '%s' ", str(dom.info()[0]))
             except libvirt.libvirtError:

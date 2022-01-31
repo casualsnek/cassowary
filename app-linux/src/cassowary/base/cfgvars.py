@@ -24,6 +24,7 @@ class Vars:
             "app_session_client": "xfreerdp",
             "full_session_client": "xfreerdp",
             "vm_auto_suspend": 0,
+            "send_suspend_notif": 0,
             "libvirt_uri": "qemu:///system",
             "vm_suspend_delay": 600,
             "term": "xterm",

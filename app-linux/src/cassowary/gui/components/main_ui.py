@@ -152,7 +152,7 @@ Version=1.0
     def __reconnect(self, no_popup=False):
         # Wake the VM if paused and wait for networking to be active !
         vm_wake()
-        fix_black_window(forced=True)
+        fix_black_window()
         self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
         try:
             print("Trying to reconnect")
@@ -237,12 +237,13 @@ Version=1.0
         cfgvars.config["host"] = self.inp_vmip.text()
         cfgvars.config["libvirt_uri"] = self.inp_libvirturi.text()
         cfgvars.config["rdp_scale"] = int(["100", "140", "180"][self.inp_rdpscale.value()])
-        cfgvars.config["rdp_multimon"] = self.inp_rdpmultimon.checkState()
+        cfgvars.config["rdp_multimon"] = 1 if self.inp_rdpmultimon.isChecked() else 0
         cfgvars.config["rdp_flags"] = self.inp_rdpflags.text()
         cfgvars.config["term"] = self.inp_defterm.text()
         cfgvars.config["winshare_mount_root"] = self.inp_mountroot.text()
         cfgvars.config["vm_suspend_delay"] = self.inp_sleepd.value()
         cfgvars.config["vm_auto_suspend"] = 1 if self.inp_enbsuspend.isChecked() else 0
+        cfgvars.config["send_suspend_notif"] = 1 if self.inp_susnotif.isChecked() else 0
         cfgvars.config["app_session_client"] = self.inp_apprdc.currentText()
         cfgvars.config["full_session_client"] = self.inp_fullrdc.currentText()
 
@@ -263,6 +264,7 @@ Version=1.0
         self.inp_apprdc.setCurrentText(cfgvars.config["app_session_client"])
         self.inp_sleepd.setValue(cfgvars.config["vm_suspend_delay"])
         self.inp_enbsuspend.setChecked(bool(cfgvars.config["vm_auto_suspend"]))
+        self.inp_susnotif.setChecked(bool(cfgvars.config["send_suspend_notif"]))
         self.inp_rdpscale.setValue({100: 0, 140: 1, 180: 2}[cfgvars.config["rdp_scale"]])
         self.inp_rdpmultimon.setChecked(bool(cfgvars.config["rdp_multimon"]))
 
