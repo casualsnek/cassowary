@@ -36,7 +36,7 @@ To do this create the folder `~/.config/libvirt/` and inside this folder create 
 
 ```
 $ mkdir -p ~/.config/libvirt
-$ echo "uri_default = "qemu:///system"" >> ~/.config/libvirt/libvirt.conf
+$ echo "uri_default = \"qemu:///system\"" >> ~/.config/libvirt/libvirt.conf
 ```
 
 Now you will need to restart for all the changes to take place.
@@ -105,7 +105,11 @@ with:
 - Go to Video QXL section and set **Model** to **VirtIO** and check the 3D acceleration option;
 - (if after those two changes all you get is a black screen, revert those changes. This could happen with nVidia graphics card);
 - Start the VM by clicking the play button on top left (you may need to click the Monitor icon to show the VM screen ). Login to desktop;
-- Open up edge and browse to this page and continue the instructions for installing cassowary.
+- Open up edge and browse to this page and continue the instructions for installing cassowary.:
+
+---
+
+Note: For better 3D performance you can use VmWare or other virtualization platform, ( The IP autodetection and VM auto suspend only works for libvirt based platforms as of now.
 
 ---
 
