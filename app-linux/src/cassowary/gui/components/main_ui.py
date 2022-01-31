@@ -152,7 +152,7 @@ Version=1.0
     def __reconnect(self, no_popup=False):
         # Wake the VM if paused and wait for networking to be active !
         vm_wake()
-        fix_black_window()
+        fix_black_window(forced=True)
         self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
         try:
             print("Trying to reconnect")
