@@ -242,7 +242,7 @@ def vm_suspension_handler():
             process = subprocess.check_output(["ps", "auxfww"])
             # Check if any cassowary started freerdp process is running or not
             # print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
-            if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
+            if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1 or len(re.findall(r".*cassowary -a", process.decode())) >= 1:
                 last_active_on = int(time.time())  # Process exists, set last active to current time and do nothing else
                 print("Process exists ! Doing nothing...")
             elif int(time.time()) - last_active_on > cfgvars.config["vm_suspend_delay"] \
@@ -285,6 +285,29 @@ def vm_suspension_handler():
             tc = 0
             logger.debug("Refreshing config to update to probable config changes !")
             cfgvars.refresh_config()
+
+def fix_black_window(forced=False):
+    first_launch_track = "/tmp/cassowary-rdp-login-done.state"
+    if not os.path.isfile(first_launch_track) or forced:
+        # The test window was forced or no other window was opened prevouusly
+        logger.debug("Opening & closing a test window to trigger login or try to fix black screen bug on first launch")
+        cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
+              '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \
+              '/wm-class:"cassowaryApp-echo" /app:"cmd.exe"'.format(domain=cfgvars.config["winvm_hostname"],
+                                                                    user=cfgvars.config["winvm_username"],
+                                                                    passd=cfgvars.config["winvm_password"],
+                                                                    ip=cfgvars.config["host"]
+                                                                    )
+        process = subprocess.Popen(["sh", "-c", "{}".format(cmd)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        ts = int(time.time())
+        while process.poll() is None:
+            for line in process.stdout:
+                if "xf_lock_x11" in line or int(time.time()) - ts > 10:
+                    open(first_launch_track, "w").write(str(int(time.time())))
+                    logger.debug("Created a marker -> One session done")
+                    # Create file to remember that one session was already done
+                    process.kill()
+    logger.debug("An app was already opened, the black window should not appear now !")
 
 def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"

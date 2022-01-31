@@ -5,7 +5,7 @@ import sys
 import traceback
 import time
 from .base.log import get_logger
-from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake
+from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake, fix_black_window
 from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
 from .gui.components.main_ui import MainWindow
@@ -198,6 +198,7 @@ def main():
                         cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
                     #cmd = cmd + " 1> /dev/null 2>&1 &"
                     vm_wake()
+                    fix_black_window()
                     logger.debug("guest-run with commandline: "+cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
@@ -217,6 +218,7 @@ def main():
                                               execu="cmd.exe", icon=icon)
                     cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
                     vm_wake()
+                    fix_black_window()
                     logger.debug("guest-open with commandline: " + cmd)
                     process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
                     process.wait()
