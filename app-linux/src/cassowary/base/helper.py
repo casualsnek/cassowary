@@ -290,6 +290,7 @@ def vm_suspension_handler():
             # Else, either the VM was suspended and no cassowary application has been launched since then, or we do not
             # have required inactivity duration, do nothing just wait
         time.sleep(2)
+        tc = tc+2
         if tc >= 10:
             tc = 0
             logger.debug("Refreshing config to update to probable config changes !")
