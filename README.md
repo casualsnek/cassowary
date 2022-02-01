@@ -16,6 +16,7 @@ Give a star ⭐ or follow if you find this project useful
  - Easily access host filesystem from windows
  - Easy to use configuration utility
  - Creating application launcher for windows application easily
+ - Automatically suspending VM when no windows application is in use and auto resume when required ( virt-manager only )
 
 ## This README consists of instructions for:
 1. [Setting up Windows VM with virt-manager](docs/1-virt-manager.md)
@@ -40,5 +41,4 @@ also a bin folder will be created in app-windows containing the setup files
 # 5. How can i help ?
 - Improve the README.md
 - Report bugs or submit patches
-- Maybe video instructions for new users, or add screenshots with the setup instructions
 - Maybe donate so i can spend some more time maintaining it !
