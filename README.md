@@ -43,4 +43,4 @@ also a bin folder will be created in app-windows containing the setup files
 # 5. How can i help ?
 - Improve the README.md
 - Report bugs or submit patches
-- Maybe donate so i can spend some more time maintaining it !
+- Suggest new features or improvements on existing ones !
