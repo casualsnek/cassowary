@@ -37,8 +37,8 @@ $ ./buildall.sh
 ```
 If `buildall.sh` produces error such as `bash: ./buildall.sh: Permission denied`, run this command `chmod +x buildall.sh` and run `./buildall.sh` again.
 
-This will result a dist folder inside app-linux which contains the installed wheel file
-also a bin folder will be created in app-windows containing the setup files
+This will result a dist folder inside app-linux which contains the installable wheel file
+also a bin folder will be created in app-windows containing the setup files for windows
 
 # 5. How can i help ?
 - Improve the README.md
