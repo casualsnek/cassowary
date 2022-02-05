@@ -4,7 +4,7 @@
 
 ![App Demo GIF](docs/img/app-preview.gif)
 
-With Cassowary you can run a Windows virtual machine and use Windows applications on Linux as if they were native applications by using FreeRDP and remote apps as the base.
+With Cassowary you can run a Windows virtual machine and use Windows applications on Linux as if they were native applications, built upon FreeRDP and remote apps technology.
 
 **If you prefer a setup guide video instead of a wall of text :  [Click Here](https://www.youtube.com/watch?v=ftq-c_VgmK0)**
 
