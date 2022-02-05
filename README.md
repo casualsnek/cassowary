@@ -6,7 +6,7 @@
 
 With Cassowary you can run a Windows virtual machine and use Windows applications on Linux as if they were native applications, built upon FreeRDP and remote apps technology.
 
-**If you prefer a setup guide video instead of a wall of text :  [Click Here](https://www.youtube.com/watch?v=ftq-c_VgmK0)**
+**If you prefer a setup guide video instead of a wall of text, [click here.](https://www.youtube.com/watch?v=ftq-c_VgmK0)**
 
 Please give a star ⭐ or follow this project if you find it useful.
 
@@ -37,7 +37,14 @@ $ git clone https://github.com/casualsnek/cassowary
 $ cd cassowary
 $ ./buildall.sh
 ```
-If `buildall.sh` produces an error such as `bash: ./buildall.sh: Permission denied`, run this command `chmod +x buildall.sh` and run `./buildall.sh` again.
+If `buildall.sh` produces an error such as `bash: ./buildall.sh: Permission denied`, run this command:
+```
+chmod +x buildall.sh
+```
+and then run the following again:
+```
+./buildall.sh
+```
 
 This will create a `dist` folder inside `app-linux` which contains the installable wheel file.  
 A `bin` folder will also be created inside `app-windows` containing the setup files for Windows.
