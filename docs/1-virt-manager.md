@@ -10,8 +10,8 @@ $ sudo pacman -S virt-manager
 ### Making KVM run without root access
 
 ```
-$ sudo sed -i "s/#user = "root"/user = "$(id -un)"/g" /etc/libvirt/qemu.conf
-$ sudo sed -i "s/#group = "root"/group = "$(id -gn)"/g" /etc/libvirt/qemu.conf
+$ sudo sed -i "s/#user = \"root\"/user = \"$(id -un)\"/g" /etc/libvirt/qemu.conf
+$ sudo sed -i "s/#group = \"root\"/group = \"$(id -gn)\"/g" /etc/libvirt/qemu.conf
 $ sudo usermod -a -G kvm $(id -un)
 $ sudo usermod -a -G libvirt $(id -un)
 $ sudo systemctl restart libvirtd
