@@ -375,7 +375,7 @@ Version=1.0
                     # Add shortcut button on last column
                     btn = QPushButton(self.tbl_maps)
                     btn.setText(' Remove ')
-                    btn.clicked.connect(lambda x, nm=file_format: self.remove_association(nm[1:]))
+                    btn.clicked.connect(lambda x, nm=file_format: self.remove_association(nm))
                     btn.setMaximumWidth(100)
 
                     # Fill the row
