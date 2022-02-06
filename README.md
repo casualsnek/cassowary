@@ -30,7 +30,7 @@ Please give a star ⭐ or follow this project if you find it useful.
 <br>
 
 
-# Building Cassowary from source
+## Building Cassowary from source
 This step is necessary ONLY if you don't want to use the releases from the [release page](https://github.com/casualsnek/cassowary/releases) and you want to build the `.zip` and the `.whl` files by yourself!
 
 Install [wine](https://wiki.winehq.org/Download) first, in order to build Windows application on Linux. Internet access is required to download the python binary for setup. 
@@ -52,7 +52,7 @@ and then run the following again:
 This will create a `dist` folder inside `app-linux` which contains the installable wheel file.  
 A `bin` folder will also be created inside `app-windows` containing the setup files for Windows.
 
-# How can I help?
+## How can I help?
 - Improve the README.md and/or the documentation
 - Report bugs or submit patches
 - Suggest new features or improvements on existing ones!
