@@ -16,7 +16,7 @@ Here we will be using Arch Linux. You can easily find equivalent commands for yo
 - Install python3, python-pip, freerdp and dependencies by running following commands on terminal:
 
 ```
-$ sudo pacman -S python3 python-pip freerdp
+$ sudo pacman -S python3 python-pip freerdp libvirt-python
 $ pip3 install PyQt5
 ```
 
