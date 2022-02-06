@@ -87,7 +87,7 @@ and save them in a convenient location.
 - Goto XML tab of CPU and replace the section:
 
 ```
-<clock offset='localtime'>
+<clock offset="localtime">
 	.......
 	.......
 </clock>
