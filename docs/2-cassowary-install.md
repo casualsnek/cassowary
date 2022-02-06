@@ -13,7 +13,7 @@ Here we will be using Arch Linux. You can easily find equivalent commands for yo
 
 - Go to the [release page](https://github.com/casualsnek/cassowary/releases/) and download latest `.whl`;  
 - Open terminal on the location where you downloaded the `.whl` file;  
-- Install `python3`, `python3-pip`, `freerdp2` and dependencies by running following commands on terminal:
+- Install `python3`, `python3-pip`, `freerdp2` packages and dependencies by running following commands on terminal:
 
 ```
 $ sudo pacman -S python3 python3-pip freerdp
@@ -28,7 +28,7 @@ $ pip install cassowary*
 
 > If you get any warning about the folder `/home/$USER/.local/bin` not in your PATH, you can easily add it by adding it to your `$HOME/.profile` or `$HOME/.bash_profile`:
 > ```
-> echo "$PATH=$PATH:$HOME/.local/bin" > $HOME/.profile
+> echo "PATH=\$PATH:$HOME/.local/bin" >> $HOME/.profile
 > ```
 
 - Launch cassowary configuration utility with:

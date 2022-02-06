@@ -38,6 +38,8 @@ A. Most Linux system allow setting default application for file type, create a A
 
 A. Since cassowary wont launch without a user being logged in, try launching any windows application and click reconnect !
 
+---
+
 **Q. Open on host or open host terminal does not work?**
 
 A. Make sure you have setup background service autostart (logout and login is required after clicking on setup button). You can also try manually launching background service using:

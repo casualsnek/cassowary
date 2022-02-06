@@ -31,7 +31,7 @@ $ wget https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/us
 $ sudo mv ~/usr.sbin.dnsmasq /etc/apparmor.d/
 ```
 
-Now you have to modify this profile adding a `r` at the end of line 116, before the comma, so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
+Now you have to modify this profile by adding a `r` at the end of line 116, before the comma, so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
 
 This can also be done via terminal:
 
@@ -55,8 +55,8 @@ Now you will need to restart for all the changes to take place.
 We will need either Windows 7, 8, or 10 Pro, Enterprise or Server to use RDP apps.  
 VirtIO driver will improve the VM performance while having lowest overhead.
 
-> **BE SURE TO USE AN ADBLOCK!**
-> Download links are generated directly from Microsoft CDN.
+> **BE SURE TO USE AN ADBLOCK FOR THE SITE BELOW!**  
+> Download links are generated directly from Microsoft CDN, so they are totally legit.
 
 - Download Windows isos from: [HERE](https://tb.rg-adguard.net/public.php)
 
@@ -116,9 +116,11 @@ with:
 <img src="img/virt-manager-9.png" alt="virt-manager-9">
 
 - Click **Begin Installation** on top left;
-- Follow the installation instructions for Windows 10 and when choosing a Custom installation you will get no drives to install Windows 10 on. To make the VirtIO drive works you will have to click on **Load Driver**, then choose **OK** and finally select the driver for Windows 10;  
-<img src="img/virt-manager-10.png" alt="virt-manager-10">
+- Follow the installation instructions for Windows 10 and when choosing a Custom installation you will get no drives to install Windows 10 on. To make the VirtIO drive works you will have to click on **Load Driver**, then choose **OK** and finally select the driver for Windows 10;
+
 > If no drivers are loaded or shown, let Windows search for them inside the `amd64` folder of the VirtIO disk.
+
+<img src="img/virt-manager-10.png" alt="virt-manager-10">
 
 - After that your drive will show and you can continue like a normal Windows 10 installation;
 - After some time you will get to "Let's connect to internet page", click on **I dont have internet** at bottom left and continue with limited setup;
@@ -128,10 +130,11 @@ with:
 - Shut down the VM and from the menu bar select **View** and then **Details**;
 - Go to Display Spice section and set **Listen Type** to **None**; also check the OpenGL option and click Apply;
 - Go to Video QXL section and set **Model** to **VirtIO** and check the 3D acceleration option;
+
 > If after those two changes all you get is a black screen, revert those changes. This could happen with nVidia graphics card;
 
 - Start the VM by clicking the play button on top left (you may need to click the Monitor icon to show the VM screen ). Login to desktop;
-- Open up edge and browse to this page and continue the instructions for installing cassowary.:
+- Open up edge and browse to this page and continue the instructions for installing cassowary.
 
 ---
 
