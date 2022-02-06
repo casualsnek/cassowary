@@ -31,7 +31,7 @@ Please give a star ⭐ or follow this project if you find it useful.
 
 
 ## Building Cassowary from source
-This step is necessary ONLY if you don't want to use the releases from the [release page](https://github.com/casualsnek/cassowary/releases) and you want to build the `.zip` and the `.whl` files by yourself!
+This step is ONLY necessary if you don't want to use the releases from the [release page](https://github.com/casualsnek/cassowary/releases) and you want to build the `.zip` and the `.whl` files by yourself!
 
 Install [wine](https://wiki.winehq.org/Download) first, in order to build Windows application on Linux. Internet access is required to download the python binary for setup. 
 
