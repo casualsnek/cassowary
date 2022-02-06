@@ -62,7 +62,7 @@
  echo "==> Killing running cassowary instance"
  taskkill /im cassowary.exe /f
  echo "==> Copying files to Program Files directory"
- Xcopy /E /I /Y cassowary\ "C:\Program Files\cassowary\"
+ Xcopy /E /I /Y cassowary "C:\Program Files\cassowary"
  echo "==> Copying no console script and hostopen.bat"
  Xcopy /I /Y cassowary_nw.vbs "C:\Program Files\cassowary\"
  Xcopy /I /Y hostopen.bat "C:\Program Files\cassowary\"
@@ -72,7 +72,8 @@
  SETX /M PATH "%PATH%;C:\Program Files\cassowary\"
  echo "==> Creating scheduled task to run server after logon"
  schtasks /Create /XML cassowary-server.xml /tn cassowary-server /f
- echo "==> Allowing cassowary through firewall"
+ echo "==> Allowing cassowary and RDP connection through firewall"
  netsh advfirewall firewall add rule name="Cassowary Server" dir=in action=allow program="C:\Program Files\cassowary\cassowary.exe" enable=yes
+ netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
  echo " ==> Setup complete, press any key to exit .... Restart for all changes to take place !"
  pause

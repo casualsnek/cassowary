@@ -22,8 +22,7 @@ class FileAssociation:
         # Setting new associations should record previous ftype of extension for easy removal of association
         # Check if ftype is set to xdg_open_handle_bin %1 if not set it
         cmd_out = uac_cmd_exec("ftype {}".format(cfgvars.config["assoc_ftype"]), noadmin=True)
-        self.open_command_string = '"{path_to_bin}" "%1"'.format(path_to_bin=cfgvars.config["xdg_open_handle"])
-        if self.open_command_string not in cmd_out:
+        if cfgvars.config["xdg_open_handle"] not in cmd_out:
             logger.error("Ftype not associated to app, dobule clicking file will not trigger xdg-open")
             logger.debug("Trying to fix ftype and open command string")
             # ftype not set
@@ -31,7 +30,7 @@ class FileAssociation:
                 uac_cmd_exec("assoc .xdgo={ftype}".format(ftype=cfgvars.config["assoc_ftype"]))
             uac_cmd_exec('ftype {ftype}={launch_str}'.format(
                 ftype=cfgvars.config["assoc_ftype"],
-                launch_str=self.open_command_string)
+                launch_str=cfgvars.config["xdg_open_handle"])
             )
 
     @staticmethod
@@ -56,6 +55,8 @@ class FileAssociation:
         # Get current associated ftype: assoc .format  ->  .format=ftype
         cmd_out = uac_cmd_exec("assoc .{extension}".format(extension=file_format), noadmin=True)
         old_association = ""
+        if file_format in ["exe", "msi"]:
+            return False, "Refusing to change association for this file type as this might break the system ! "
         if cmd_out is not None:
             if " association not found for extension" not in cmd_out:
                 # An ftype is associated with this extension

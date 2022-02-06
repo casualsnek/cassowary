@@ -8,6 +8,15 @@ Windows Registry Editor Version 5.00
     [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Terminal Server]
     "fDenyTSConnections"=dword:00000000
 
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Terminal Server]
+    "fSingleSessionPerUser"=dword:00000000
+
+    [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server]
+    "fDenyTSConnections"=dword:00000000
+
+    [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server]
+    "fSingleSessionPerUser"=dword:00000000
+
     [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Terminal Server\TSAppAllowList]
     "fDisabledAllowList"=dword:00000001
 
@@ -21,5 +30,5 @@ Windows Registry Editor Version 5.00
     @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open \"%1\""
 
     [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\cassowary.exe]
-    @=""
+    @="C:\\Program Files\\cassowary\\cassowary.exe"
     UseUrl=dword:00000001

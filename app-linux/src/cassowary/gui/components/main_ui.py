@@ -13,6 +13,7 @@ from .desktopitemdialog import DesktopItemDialog
 from PyQt5 import uic
 from cassowary.client import Client
 import subprocess
+import re
 
 logger = get_logger(__name__)
 
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         self.btn_choosemountroot.clicked.connect(self.__set_mount_dir)
         self.btn_newassoc.clicked.connect(self.add_association)
         self.btn_scanapp.clicked.connect(self.populate_applications)
-        self.btn_reconnect.clicked.connect(lambda: self.__reconnect())
+        self.btn_reconnect.clicked.connect(lambda: self.__reconnect(force_reconnect=True))
         self.btn_autofill.clicked.connect(self.__fill_basic_info)
         self.btn_killfreerdp.clicked.connect(lambda: os.popen("killall xfreerdp & killall wlfreerdp"))
         self.btn_fullrdp.clicked.connect(full_rdp)
@@ -149,10 +150,13 @@ Version=1.0
         else:
             self.dialog.run(data)
 
-    def __reconnect(self, no_popup=False):
+    def __reconnect(self, no_popup=False, force_reconnect=False):
         # Wake the VM if paused and wait for networking to be active !
         vm_wake()
-        fix_black_window(forced=True)
+        proc = subprocess.check_output(["ps", "auxfww"])
+        if force_reconnect or len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", proc.decode())) < 1:
+            fix_black_window(forced=True)
+
         self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
         try:
             print("Trying to reconnect")

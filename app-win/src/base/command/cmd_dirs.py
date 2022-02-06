@@ -20,7 +20,7 @@ class DriveShareHelper:
             if "Z:\\" not in active_maps:
                 logger.debug("Z: is not mapped... Mapping now")
                 # No map for root, create one now
-                cmd_out = uac_cmd_exec("net use Z: \\\\tsclient\\root /persistent:Yes", noadmin=True, timeout=8)
+                cmd_out = uac_cmd_exec("net use Z: \"\\\\tsclient\\root\" /persistent:Yes", noadmin=True, timeout=8)
                 if "command completed successfully" in cmd_out:
                     logger.debug("Host root is now mounted as Z :) ")
                 else:
@@ -63,10 +63,11 @@ class DriveShareHelper:
             remote_path = remote_path[:-1]
         if not drive_letter + ":\\" in active_maps:
             # Drive letter is not used, good to go
-            cmd_out = uac_cmd_exec(
-                "net use {drive_letter}: {network_location} /persistent:Yes".format(drive_letter=drive_letter,
-                                                                                    network_location=network_location),
-                noadmin=True)
+            command_line = "net use {drive_letter}: \"{network_location}\" /persistent:Yes".format(
+                drive_letter=drive_letter,
+                network_location=network_location.strip()
+            )
+            cmd_out = uac_cmd_exec(command_line, noadmin=True)
             if "command completed successfully" in cmd_out:
                 cfgvars.refresh_config()
                 # Keep a record of remote host path for this map
@@ -79,7 +80,8 @@ class DriveShareHelper:
                 logger.warning("The network path (%s) to map was not found", network_location)
                 return False, "The network path to map was not found"
             else:
-                logger.error("Unknown error while trying to map to drive: '%s'", cmd_out)
+                logger.error("Unknown error while trying to map to drive '%s' => Used commandline: %s", cmd_out,
+                             command_line)
                 return False, "Unknown error while trying to map to drive '{}'".format(cmd_out)
         else:
             logger.warning("Map not added, drive letter already in use")
