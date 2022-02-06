@@ -371,16 +371,17 @@ Version=1.0
             while self.tbl_associations.rowCount() > 0:
                 self.tbl_associations.removeRow(0)
             for file_format in data:
-                # Add shortcut button on last column
-                btn = QPushButton(self.tbl_maps)
-                btn.setText(' Remove ')
-                btn.clicked.connect(lambda x, nm=file_format: self.remove_association(nm[1:]))
-                btn.setMaximumWidth(100)
+                if file_format is not None or file_format.strip() != "":
+                    # Add shortcut button on last column
+                    btn = QPushButton(self.tbl_maps)
+                    btn.setText(' Remove ')
+                    btn.clicked.connect(lambda x, nm=file_format: self.remove_association(nm[1:]))
+                    btn.setMaximumWidth(100)
 
-                # Fill the row
-                rows = self.tbl_installedapps.rowCount()
-                self.tbl_associations.insertRow(rows)
-                self.tbl_associations.setItem(rows, 0, QTableWidgetItem(file_format))
-                self.tbl_associations.setCellWidget(rows, 1, btn)
+                    # Fill the row
+                    rows = self.tbl_installedapps.rowCount()
+                    self.tbl_associations.insertRow(rows)
+                    self.tbl_associations.setItem(rows, 0, QTableWidgetItem(file_format))
+                    self.tbl_associations.setCellWidget(rows, 1, btn)
         else:
             self.dialog.run(data)
