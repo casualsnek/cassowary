@@ -96,9 +96,9 @@ and save them in a convenient location.
 with:
 
 ```
-<clock offset='localtime'>
-  <timer name='hpet' present='yes'/>
-  <timer name='hypervclock' present='yes'/>
+<clock offset="localtime">
+  <timer name="hpet" present="yes"/>
+  <timer name="hypervclock" present="yes"/>
 </clock>
 ```
 
