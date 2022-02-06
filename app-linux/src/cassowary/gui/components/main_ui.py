@@ -379,7 +379,7 @@ Version=1.0
                     btn.setMaximumWidth(100)
 
                     # Fill the row
-                    rows = self.tbl_installedapps.rowCount()
+                    rows = self.tbl_associations.rowCount()
                     self.tbl_associations.insertRow(rows)
                     self.tbl_associations.setItem(rows, 0, QTableWidgetItem(file_format))
                     self.tbl_associations.setCellWidget(rows, 1, btn)
