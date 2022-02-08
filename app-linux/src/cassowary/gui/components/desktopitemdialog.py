@@ -27,9 +27,11 @@ class DesktopItemDialog(QDialog):
             pass
         self.inp_name.setText(name)
         self.inp_icon.setText(icon_path)
-        self.inp_description.setText(description + " (casualRDH remote application)")
+        self.inp_description.setText(description + " (cassowary remote application)")
         self.inp_comment.setText("'{}' version '{}'".format(name, version))
-        self.inp_command.setText("python3 -m cassowary -c guest-run -- '{}' %u".format(path).replace("\\", "\\\\"))
+        self.inp_command.setText("python3 -m cassowary -c guest-run -- '{}' %u".format(
+            path.replace("\\", "\\\\").replace("'", "").replace("\"", ""))
+        )
         # Not using pixmap for now, just use css border-image
         self.lb_appicon.setStyleSheet("border-image: url('{}')".format(icon_path))
         self.btn_save.clicked.connect(lambda: self.__save_desktop(filename))
@@ -45,6 +47,7 @@ Icon={icon}
 Name[en_US]={name}
 Name={name}
 Categories={category}
+StartupWMClass={wmc}
 StartupNotify=true
 Terminal=false
 Type=Application
@@ -53,7 +56,8 @@ X-KDE-RunOnDiscreteGpu=false
 X-KDE-SubstituteUID=false
         """.format(comment=self.inp_comment.text(), exec_path=self.inp_command.text(),
                    generic_name=self.inp_description.text(), name=self.inp_name.text(),
-                   icon=self.inp_icon.text(), category=self.inp_categories.text())
+                   icon=self.inp_icon.text(), category=self.inp_categories.text(),
+                   wmc="cwapp-"+self.inp_name.text().replace(" ", ""))
         try:
             desktop_file_path = os.path.join(os.path.expanduser("~"), ".local", "share", "applications",
                                              filename + ".desktop")

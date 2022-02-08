@@ -4,8 +4,9 @@ import subprocess
 import sys
 import traceback
 import time
+import libvirt
 from .base.log import get_logger
-from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake, fix_black_window
+from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake, fix_black_window, vm_state
 from .base.cfgvars import cfgvars
 from PyQt5.QtWidgets import QApplication
 from .gui.components.main_ui import MainWindow
@@ -25,7 +26,8 @@ def main():
         logger.info("Connecting to server....")
         while True:
             try:
-                client_ = Client(cfgvars.config["host"], cfgvars.config["port"])
+                using_host = cfgvars.config["host"]
+                client_ = Client(using_host, cfgvars.config["port"])
                 client_.init_connection()
                 client_.accepting_forwards = True
                 logger.info("Connected to server !")
@@ -38,12 +40,18 @@ def main():
                         # We just wait here to check if anything has stopped in client object, if yes, recreate client
                         # and try again
                         while True:
-                            if not client_.sender.is_alive() or not client_.receiver.is_alive() or client_.stop_connecting:
-                                logger.info("Connection seems to be lost")
+                            if not client_.sender.is_alive() or not client_.receiver.is_alive()\
+                                    or client_.stop_connecting or using_host != cfgvars.config["host"]\
+                                    or vm_state() in [4, 5]:
+                                logger.debug("Connection seems to be lost or vm info got changed in config or vm turned off")
                                 break
+                            else:
+                                logger.info("Connected to server")
                             time.sleep(5)
-                    logger.info(
-                        "Failed to declare self host.. Retrying after 5 seconds. Server response: {}".format(data))
+                    else:
+                        logger.info(
+                        "Failed to declare self host.. Retrying after 5 seconds. Server response: {}, {}".format(status,
+                                                                                                                 data))
                 logger.info("Server error: {}".format(response))
                 client_.die()
             except KeyboardInterrupt:
@@ -103,8 +111,8 @@ def main():
                         Usage   :
                                 cassowary -c path-map -- /home/user/document/personal.docx
     """
-    BASE_RDP_CMD = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,/ ' \
-                   '+decorations /cert-ignore /audio-mode:1 /scale:{scale} /dynamic-resolution /{mflag} {rdflag} ' \
+    BASE_RDP_CMD = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,{share_root} ' \
+                   '+decorations /cert-ignore /sound /scale:{scale} /dynamic-resolution /{mflag} {rdflag} ' \
                    '/wm-class:"{wmclass}" ' \
                    '/app:"{execu}" /app-icon:"{icon}" '
     parser = argparse.ArgumentParser(description=about, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -181,6 +189,7 @@ def main():
                                               ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
                                               mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
                                               rdc=cfgvars.config["app_session_client"],
+                                              share_root=cfgvars.config["rdp_share_root"],
                                               execu=args.cmdline[0], icon=icon)
 
                     if len(translated_paths) > 1:
@@ -197,6 +206,7 @@ def main():
                         #                      V        | ending quote
                         cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
                     #cmd = cmd + " 1> /dev/null 2>&1 &"
+                    app = QApplication(sys.argv)
                     vm_wake()
                     fix_black_window()
                     logger.debug("guest-run with commandline: "+cmd)
@@ -215,8 +225,10 @@ def main():
                                               ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
                                               mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
                                               rdc=cfgvars.config["app_session_client"],
+                                              share_root=cfgvars.config["rdp_share_root"],
                                               execu="cmd.exe", icon=icon)
                     cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
+                    app = QApplication(sys.argv)
                     vm_wake()
                     fix_black_window()
                     logger.debug("guest-open with commandline: " + cmd)

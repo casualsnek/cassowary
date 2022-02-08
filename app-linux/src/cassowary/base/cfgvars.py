@@ -27,6 +27,7 @@ class Vars:
             "send_suspend_notif": 0,
             "libvirt_uri": "qemu:///system",
             "vm_suspend_delay": 600,
+            "rdp_share_root": "/",
             "term": "xterm",
             "rdp_scale": 100,
             "rdp_multimon": 0,
@@ -63,6 +64,5 @@ class Vars:
         with open(os.path.join(self.config_dir, "config.json"), "w") as dmf:
             dmf.write(json.dumps(self.config))
         self.refresh_config()
-
 
 cfgvars = Vars()

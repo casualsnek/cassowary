@@ -1,5 +1,8 @@
 @echo off
 cd /D "%~dp0\src"
+rmdir /s /q ..\bin
+rmdir /s /q build
+rmdir /s /q dist
 echo ==^> Using pyinstaller to make executable
 python -m ensurepip
 python -m pip install pyinstaller pywin32 icoextract
