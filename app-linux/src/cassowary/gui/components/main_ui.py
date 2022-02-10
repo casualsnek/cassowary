@@ -196,9 +196,9 @@ Version=1.0
         self.populate_shares()
 
     def __mapping_tab_changed(self, index):
-        if index == 0:
+        if index == 1:
             self.populate_mappings()
-        elif index == 1:
+        elif index == 0:
             self.populate_shares()
 
     def __tab_changed(self, index):

@@ -65,6 +65,7 @@
  Xcopy /E /I /Y cassowary "C:\Program Files\cassowary"
  echo "==> Copying no console script and hostopen.bat"
  Xcopy /I /Y cassowary_nw.vbs "C:\Program Files\cassowary\"
+ Xcopy /I /Y nowindow.vbs "C:\Program Files\cassowary\"
  Xcopy /I /Y hostopen.bat "C:\Program Files\cassowary\"
  echo "==> Importing registry keys"
  reg import setup.reg

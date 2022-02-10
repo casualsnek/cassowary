@@ -25,7 +25,7 @@ class StartDg(QDialog):
     def wait_vm(self):
         self.btn_startvm.hide()
         self.btn_cancel.setEnabled(False)
-        if cfgvars.config["libvirt_uri"].strip() != "":
+        if cfgvars.config["vm_name"].strip() != "":
             logging.debug("Using VM")
             try:
                 conn = libvirt.open(cfgvars.config["libvirt_uri"])

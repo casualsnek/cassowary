@@ -4,7 +4,6 @@ import subprocess
 import sys
 import traceback
 import time
-import libvirt
 from .base.log import get_logger
 from .base.helper import path_translate_to_guest, vm_suspension_handler, full_rdp, vm_wake, fix_black_window, vm_state
 from .base.cfgvars import cfgvars

@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 import time
@@ -13,6 +14,9 @@ logger = get_logger(__name__)
 
 
 
+wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
+              '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
+              '/wm-class:"cassowaryApp-echo" /app:"{app}"'
 
 def randomstr(leng=4):
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(leng))
@@ -253,7 +257,7 @@ def full_rdp():
     logger.debug("Full RDP session ended !")
 
 def vm_state():
-    if cfgvars.config["libvirt_uri"].strip() == "":
+    if cfgvars.config["vm_name"].strip() == "":
         return None
     conn = libvirt.open(cfgvars.config["libvirt_uri"])
     if conn is not None:
@@ -336,17 +340,15 @@ def fix_black_window(forced=False):
     if not os.path.isfile(first_launch_track) or forced:
         # The test window was forced or no other window was opened prevouusly
         logger.debug("Opening & closing a test window to trigger login or try to fix black screen bug on first launch")
-        cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
-              '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
-              '/wm-class:"cassowaryApp-echo" /app:"ipconfig"'.format(domain=cfgvars.config["winvm_hostname"],
+        cmd = wake_base_cmd.format(domain=cfgvars.config["winvm_hostname"],
                                                                     user=cfgvars.config["winvm_username"],
                                                                     passd=cfgvars.config["winvm_password"],
                                                                     ip=cfgvars.config["host"],
-                                                                    share_root=cfgvars.config["rdp_share_root"]
+                                                                    share_root=cfgvars.config["rdp_share_root"],
+                                                                    app="ipconfig.exe"
                                                                     )
-        logger.debug("Trying to fix black window bug by opening a test window before requested application - "+str(
-            time.time()
-        ))
+        logger.debug("Trying to fix black window bug by opening a test window before requested application - "+
+                     str(time.time())+"CMDLINE: "+cmd)
         process = subprocess.Popen(["sh", "-c", "{}".format(cmd)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         ts = int(time.time())
         while process.poll() is None:
@@ -366,7 +368,7 @@ def fix_black_window(forced=False):
         logger.debug("Test window opened and closed !")
     logger.debug("An app was already opened, the black window should not appear now !")
 
-def vm_wake(session_create_forced=False):
+def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
     vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
     logger.debug("Attempting to resume VM")
