@@ -47,6 +47,7 @@ A. Make sure you have setup background service autostart (logout and login is re
 ```
 $ python -m cassowary -bc
 ```
+
 ---
 
 **Q. I have found a bug/issue, have a suggestion or I have questions not answered here!**

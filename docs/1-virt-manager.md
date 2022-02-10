@@ -1,4 +1,5 @@
 # 1. Setting up Windows vm with virt-manager and KVM
+
 This will help you set up an efficient virtual machine for use with cassowary.
 
 The instructions are written mainly for Arch Linux, so be sure to adapt them to the distro you are using!
@@ -21,6 +22,7 @@ $ sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
 ```
 
 ### Making network available with AppArmor enabled
+
 On some Linux distribution, if AppArmor is enabled, it is necessary to modify the file `/etc/apparmor.d/usr.sbin.dnsmasq` to be able to connect to the network or virt-manager will throw a segmentation fault.
 
 If you can't find this profile, be sure to install every additional packages regarding AppArmor profiles.  
@@ -40,6 +42,7 @@ $ sudo sed -i "s/\/usr\/libexec\/libvirt_leaseshelper m,/\/usr\/libexec\/libvirt
 ```
 
 ### Create libvirt.conf
+
 On some Linux distribution is better to create a config file to make sure the default libvirt uri is the system one.
 
 To do this create the folder `~/.config/libvirt/` and inside this folder create the `libvirt.conf` with `uri_default = "qemu:///system"`
@@ -52,6 +55,7 @@ $ echo "uri_default = \"qemu:///system\"" >> ~/.config/libvirt/libvirt.conf
 Now you will need to restart for all the changes to take place.
 
 ### Download Windows .iso image and VirtIO Drivers for Windows
+
 We will need either Windows 7, 8, or 10 Pro, Enterprise or Server to use RDP apps.  
 VirtIO driver will improve the VM performance while having lowest overhead.
 
@@ -65,31 +69,40 @@ VirtIO driver will improve the VM performance while having lowest overhead.
 and save them in a convenient location.
 
 ### Creating a Virtual Machine
+
 - Open virt-manager from your application menu
+
 - On virt-manager click on **Edit** -> **Preferences**, check **Enable XML editing** then click Close;  
-<img src="img/virt-manager-0.png" alt="virt-manager-0">
+  
+  <img src="img/virt-manager-0.png" alt="virt-manager-0">
 
 - From virt-manager menu bar select **File** and then **New Virtual Machine**;
+
 - On the New VM window select **Local Install media** and click Next;  
-<img src="img/virt-manager-1.png" alt="virt-manager-1">
+  
+  <img src="img/virt-manager-1.png" alt="virt-manager-1">
 
 - Browse and select the Windows 10 iso you downloaded on install media then click Next again;
+
 - Set the CPU cores (2 recommended), Memory (4096 MB recommended) and Disk Space as per your preferences;  
-<img src="img/virt-manager-2.png" alt="virt-manager-2">
-<img src="img/virt-manager-3.png" alt="virt-manager-3">
+  
+  <img src="img/virt-manager-2.png" alt="virt-manager-2">
+  <img src="img/virt-manager-3.png" alt="virt-manager-3">
 
 - Give a name to your vm such as `Win10` and check **Customize configuration before install** then click on Finish!;  
-<img src="img/virt-manager-4.png" alt="virt-manager-4">
+  
+  <img src="img/virt-manager-4.png" alt="virt-manager-4">
 
 - In the CPU tab make sure **Copy host configuration** is checked;  
-<img src="img/virt-manager-5.png" alt="virt-manager-5">
+  
+  <img src="img/virt-manager-5.png" alt="virt-manager-5">
 
 - Goto XML tab of CPU and replace the section:
 
 ```
 <clock offset="localtime">
-	.......
-	.......
+    .......
+    .......
 </clock>
 ```
 
@@ -103,19 +116,25 @@ with:
 ```
 
 - In the Memory tab set the **Curent allocation** to **1024**, so the VM won't use 4GiB of memory directly but it will range from 1GiB to 4GiB;  
-<img src="img/virt-manager-6.png" alt="virt-manager-6">
+  
+  <img src="img/virt-manager-6.png" alt="virt-manager-6">
 
 - In the Boot Options tab you could check **Start the virtual machine on host bootup** if you would like the VM to boot automatically at your PC boot;
+
 - In the SATA Disk 1 tab set the **Disk bus** to **VirtIO**;  
-<img src="img/virt-manager-7.png" alt="virt-manager-7">
+  
+  <img src="img/virt-manager-7.png" alt="virt-manager-7">
 
 - Move over to NIC section and set **Device Model** to **virtio**;  
-<img src="img/virt-manager-8.png" alt="virt-manager-8">
+  
+  <img src="img/virt-manager-8.png" alt="virt-manager-8">
 
 - Click on **Add hardware** at the bottom left, select **Storage** then choose **Select or Create custom storage**; click on **Manage**, browse and select the downloaded virtio-win driver iso. Finally set the device type to **CDROM** and click on Finish;  
-<img src="img/virt-manager-9.png" alt="virt-manager-9">
+  
+  <img src="img/virt-manager-9.png" alt="virt-manager-9">
 
 - Click **Begin Installation** on top left;
+
 - Follow the installation instructions for Windows 10 and when choosing a Custom installation you will get no drives to install Windows 10 on. To make the VirtIO drive works you will have to click on **Load Driver**, then choose **OK** and finally select the driver for Windows 10;
 
 > If no drivers are loaded or shown, let Windows search for them inside the `amd64` folder of the VirtIO disk.
