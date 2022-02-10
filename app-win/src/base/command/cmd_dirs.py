@@ -20,6 +20,7 @@ class DriveShareHelper:
             if "Z:\\" not in active_maps:
                 logger.debug("Z: is not mapped... Mapping now")
                 # No map for root, create one now
+                uac_cmd_exec("net use Z: /delete", noadmin=True, timeout=8)
                 cmd_out = uac_cmd_exec("net use Z: \"\\\\tsclient\\root\" /persistent:Yes", noadmin=True, timeout=8)
                 if "command completed successfully" in cmd_out:
                     logger.debug("Host root is now mounted as Z :) ")
@@ -62,7 +63,9 @@ class DriveShareHelper:
         if len(remote_path) > 1 and remote_path.endswith("/"):
             remote_path = remote_path[:-1]
         if not drive_letter + ":\\" in active_maps:
-            # Drive letter is not used, good to go
+            # Drive letter is not used, good to go,
+            # Attempt to fix system error 87
+            uac_cmd_exec("net use {drive_letter}: /delete".format(drive_letter=drive_letter), noadmin=True, timeout=8)
             command_line = "net use {drive_letter}: \"{network_location}\" /persistent:Yes".format(
                 drive_letter=drive_letter,
                 network_location=network_location.strip()

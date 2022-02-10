@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 import time
@@ -8,9 +9,14 @@ from .log import get_logger
 import os
 import re
 import libvirt
-
+from cassowary.gui.components.vmstart import StartDg
 logger = get_logger(__name__)
 
+
+
+wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
+              '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
+              '/wm-class:"cassowaryApp-echo" /app:"{app}"'
 
 def randomstr(leng=4):
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(leng))
@@ -174,7 +180,17 @@ def handle_win_ip_paths(path, attempts=2):
         else:
             return False, path
     else:
-        return None, path
+        if os.path.exists(path):
+            logger.debug("'%s' is a valid absolute full path in fs.. No processing done")
+            return None, path
+        elif os.path.exists(os.path.join(cfgvars.config["rdp_share_root"], path[1:] if path.startswith("/") else path)):
+            rs_path = os.path.join(cfgvars.config["rdp_share_root"], path[1:] if path.startswith("/") else path)
+            logger.debug("'%s' is a path mapped to shared root fs, resolving to '%s'", path, rs_path)
+            return None, rs_path
+        else:
+            logger.warning("Requested path '%s' is probably an URL or invalid path.", path)
+            logger.debug(cfgvars.config["rdp_share_root"])
+            return None, path
 
 
 # Return {"/mnt/casual/d": "\\192.168.40.11\d"}
@@ -198,7 +214,17 @@ def path_translate_to_guest(path):
                         # resource is windows location of net share
                         return full_path.replace(mount, resource).replace("/", "\\")
         # It is not a windows location, I expect root '/' to be always mounted as Z:\ so ....
-        return ("Z:" + full_path).replace("/", "\\")
+        if full_path.startswith(cfgvars.config["rdp_share_root"]):
+            if full_path == cfgvars.config["rdp_share_root"]:
+                return "Z:\\"
+            else:
+                if cfgvars.config["rdp_share_root"] == "/":
+                    return ("Z:" + full_path).replace("/", "\\")
+                else:
+                    return full_path.replace(cfgvars.config["rdp_share_root"], "Z:").replace("/", "\\")
+        else:
+            logger.warning("Path '%s' is not a path inside current shared root '%s', and wont be available to guest !")
+            return ("Z:" + full_path).replace("/", "\\")
     else:
         return path
 
@@ -210,7 +236,7 @@ def create_reply(message, data, status):
     return message
 
 def full_rdp():
-    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,/ +auto-reconnect +clipboard '\
+    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,{share_root} +auto-reconnect +clipboard '\
               '/cert-ignore /audio-mode:1 /scale:{scale} /wm-class:"cassowaryApp-FULLSESSION" /dynamic-resolution' \
               ' /{mflag} {rdflag} 1> /dev/null 2>&1 &'
     multimon_enable = int(os.environ.get("RDP_MULTIMON", cfgvars.config["rdp_multimon"]))
@@ -222,12 +248,25 @@ def full_rdp():
         ip=cfgvars.config["host"],
         scale=cfgvars.config["rdp_scale"],
         rdc = cfgvars.config["full_session_client"],
+        share_root=cfgvars.config["rdp_share_root"],
         mflag="multimon" if multimon_enable else "span"
     )
     logger.debug("Creating a full RDP session with commandline  : " + command)
     process = subprocess.Popen(["sh", "-c", "{}".format(cmd_final)])
     process.wait()
     logger.debug("Full RDP session ended !")
+
+def vm_state():
+    if cfgvars.config["vm_name"].strip() == "":
+        return None
+    conn = libvirt.open(cfgvars.config["libvirt_uri"])
+    if conn is not None:
+        try:
+            dom = conn.lookupByName(cfgvars.config["vm_name"])
+            return int(dom.info()[0])
+        except libvirt.libvirtError:
+             pass
+    return None
 
 def vm_suspension_handler():
     logger.debug("VM watcher active !")
@@ -301,27 +340,35 @@ def fix_black_window(forced=False):
     if not os.path.isfile(first_launch_track) or forced:
         # The test window was forced or no other window was opened prevouusly
         logger.debug("Opening & closing a test window to trigger login or try to fix black screen bug on first launch")
-        cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,/ ' \
-              '+decorations /cert-ignore /audio-mode:1 /scale:100 /dynamic-resolution /span  ' \
-              '/wm-class:"cassowaryApp-echo" /app:"ipconfig"'.format(domain=cfgvars.config["winvm_hostname"],
+        cmd = wake_base_cmd.format(domain=cfgvars.config["winvm_hostname"],
                                                                     user=cfgvars.config["winvm_username"],
                                                                     passd=cfgvars.config["winvm_password"],
-                                                                    ip=cfgvars.config["host"]
+                                                                    ip=cfgvars.config["host"],
+                                                                    share_root=cfgvars.config["rdp_share_root"],
+                                                                    app="ipconfig.exe"
                                                                     )
+        logger.debug("Trying to fix black window bug by opening a test window before requested application - "+
+                     str(time.time())+"CMDLINE: "+cmd)
         process = subprocess.Popen(["sh", "-c", "{}".format(cmd)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         ts = int(time.time())
         while process.poll() is None:
             for line in process.stdout:
-                if "xf_lock_x11" in line.decode() or int(time.time()) - ts > 10:
+                if "registered device" in line.decode() or int(time.time()) - ts > 10:
+                    logger.debug(
+                        "App window seems to be created or timeout. Creating marker & Waiting 2 seconds - "+str(
+                            time.time()
+                        )
+                    )
                     open(first_launch_track, "w").write(str(int(time.time())))
                     logger.debug("Created a marker -> One session done")
                     # Create file to remember that one session was already done
                     time.sleep(2)
                     process.kill()
                     break
+        logger.debug("Test window opened and closed !")
     logger.debug("An app was already opened, the black window should not appear now !")
 
-def vm_wake(session_create_forced=False):
+def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
     vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
     logger.debug("Attempting to resume VM")
@@ -347,6 +394,10 @@ def vm_wake(session_create_forced=False):
                     logger.debug("Added 2 sec delay for VM networking to be active !")
                     time.sleep(2)
                     fix_black_window(forced=True)
+                elif dom.info()[0] == 5:
+                    logger.debug("VM is not running showing a prompt to user")
+                    start_dialog = StartDg()
+                    start_dialog.run()
                 else:
                     logger.warning("VM state is not set to suspended : State -> '%s' ", str(dom.info()[0]))
             except libvirt.libvirtError:

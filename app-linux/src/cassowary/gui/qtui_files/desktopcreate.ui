@@ -94,7 +94,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>CasualRDH;Utilities;</string>
+       <string>CasualRDH;Utility;</string>
       </property>
      </widget>
      <widget class="QLabel" name="lb_appicon">

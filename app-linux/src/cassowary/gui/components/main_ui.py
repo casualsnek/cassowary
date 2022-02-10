@@ -25,8 +25,6 @@ class MainWindow(QMainWindow):
 
         # Create instances of other dialogs
         self.dialog = MiniDialog(self)
-        self.new_map_dialog = AddMapDialog()
-        self.new_share_dialog = AddShareDialog()
 
         # Create a client
         self.client = None
@@ -39,12 +37,13 @@ class MainWindow(QMainWindow):
         self.inp_password.setEchoMode(QLineEdit.Password)
         self.btn_savegconf.clicked.connect(self.__save_vminfo)
         self.btn_savegconf_2.clicked.connect(self.__save_vminfo) # Advanced and vminfo buttons are same
-        self.btn_newmap.clicked.connect(lambda: self.new_map_dialog.run(self.client, self.populate_mappings))
-        self.btn_newshare.clicked.connect(lambda: self.new_share_dialog.run(self.client, self.populate_shares))
+        self.btn_newmap.clicked.connect(lambda: AddMapDialog().run(self.client, self.populate_mappings))
+        self.btn_newshare.clicked.connect(lambda: AddShareDialog().run(self.client, self.populate_shares))
         self.btn_mountall.clicked.connect(mount_pending)
         self.btn_ipautodetect.clicked.connect(self.__ip_auto_fill)
         self.btn_unmountall.clicked.connect(unmount_all)
         self.btn_choosemountroot.clicked.connect(self.__set_mount_dir)
+        self.btn_chooseshareroot.clicked.connect(self.__set_shared_dir)
         self.btn_newassoc.clicked.connect(self.add_association)
         self.btn_scanapp.clicked.connect(self.populate_applications)
         self.btn_reconnect.clicked.connect(lambda: self.__reconnect(force_reconnect=True))
@@ -75,7 +74,7 @@ GenericName=cassowary-service
 Icon={icon}
 Name[en_US]=Cassowary Background Service
 Name=Cassowary Background Service
-Categories=Utilities
+Categories=Utility
 StartupNotify=true
 Terminal=false
 TerminalOptions=
@@ -99,7 +98,7 @@ GenericName=cassowary
 Icon={icon}
 Name[en_US]=Cassowary Linux
 Name=Cassowary Linux
-Categories=Utilities
+Categories=Utility
 StartupNotify=true
 Terminal=false
 TerminalOptions=
@@ -141,6 +140,10 @@ Version=1.0
         dir_path = QFileDialog.getExistingDirectory(None, 'Select mount directory:', "/mnt")
         self.inp_mountroot.setText(os.path.join(dir_path, "casualrdh"))
 
+    def __set_shared_dir(self):
+        dir_path = QFileDialog.getExistingDirectory(None, 'Select directory to be shared to VM:', "/")
+        self.inp_sharedroot.setText(dir_path)
+
     def __fill_basic_info(self):
         status, data = get_basic_info(self.client)
         if status:
@@ -156,7 +159,10 @@ Version=1.0
         proc = subprocess.check_output(["ps", "auxfww"])
         if force_reconnect or len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", proc.decode())) < 1:
             fix_black_window(forced=True)
-
+            logger.debug("Forced reconnection attempt, no active application or explicitly forced")
+        else:
+            logger.debug("An application is already running, not forcing login !")
+            fix_black_window()
         self.client = Client(cfgvars.config["host"], cfgvars.config["port"])
         try:
             print("Trying to reconnect")
@@ -190,9 +196,9 @@ Version=1.0
         self.populate_shares()
 
     def __mapping_tab_changed(self, index):
-        if index == 0:
+        if index == 1:
             self.populate_mappings()
-        elif index == 1:
+        elif index == 0:
             self.populate_shares()
 
     def __tab_changed(self, index):
@@ -243,8 +249,9 @@ Version=1.0
         cfgvars.config["rdp_scale"] = int(["100", "140", "180"][self.inp_rdpscale.value()])
         cfgvars.config["rdp_multimon"] = 1 if self.inp_rdpmultimon.isChecked() else 0
         cfgvars.config["rdp_flags"] = self.inp_rdpflags.text()
+        cfgvars.config["rdp_share_root"] = os.path.abspath(self.inp_sharedroot.text())
         cfgvars.config["term"] = self.inp_defterm.text()
-        cfgvars.config["winshare_mount_root"] = self.inp_mountroot.text()
+        cfgvars.config["winshare_mount_root"] = os.path.abspath(self.inp_mountroot.text())
         cfgvars.config["vm_suspend_delay"] = self.inp_sleepd.value()
         cfgvars.config["vm_auto_suspend"] = 1 if self.inp_enbsuspend.isChecked() else 0
         cfgvars.config["send_suspend_notif"] = 1 if self.inp_susnotif.isChecked() else 0
@@ -260,6 +267,7 @@ Version=1.0
         self.inp_password.setText(cfgvars.config["winvm_password"])
         self.inp_vmname.setText(cfgvars.config["vm_name"])
         self.inp_vmip.setText(cfgvars.config["host"])
+        self.inp_sharedroot.setText(cfgvars.config["rdp_share_root"])
         self.inp_libvirturi.setText(cfgvars.config["libvirt_uri"])
         self.inp_defterm.setText(cfgvars.config["term"])
         self.inp_mountroot.setText(cfgvars.config["winshare_mount_root"])
