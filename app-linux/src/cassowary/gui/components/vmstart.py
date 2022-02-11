@@ -10,6 +10,7 @@ import os
 
 logging = get_logger(__name__)
 
+
 class StartDg(QDialog):
     def __init__(self, parent=None):
         super(StartDg, self).__init__(parent)
@@ -18,6 +19,7 @@ class StartDg(QDialog):
         self.lb_msg.setText("The VM '{}' is not running. Do you want to start the vm now ?\n".format(cfgvars.config["vm_name"]))
         self.btn_startvm.clicked.connect(self.bg_st)
         self.btn_cancel.clicked.connect(self.close)
+
     def bg_st(self):
         stt = threading.Thread(target=self.wait_vm)
         stt.start()
@@ -52,6 +54,7 @@ class StartDg(QDialog):
                             time.sleep(1)
                         self.lb_msg.setText(self.lb_msg.text() + "=> Got VM IP address : "+ vm_ip)
                         logging.debug("VM has ip '%s' now !", vm_ip)
+                    conn.close()
             except libvirt.libvirtError:
                 logging.error("Cannot start VM. : %s", traceback.format_exc())
         self.close()

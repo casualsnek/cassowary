@@ -1,4 +1,3 @@
-import logging
 import random
 import string
 import time
@@ -10,13 +9,12 @@ import os
 import re
 import libvirt
 from cassowary.gui.components.vmstart import StartDg
+
 logger = get_logger(__name__)
-
-
-
 wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
-              '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
-              '/wm-class:"cassowaryApp-echo" /app:"{app}"'
+                '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
+                '/wm-class:"cassowaryApp-echo" /app:"{app}"'
+
 
 def randomstr(leng=4):
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(leng))
@@ -41,12 +39,13 @@ def ip_by_vm_name(name):
                     try:
                         ip = interfaces[interface]["addrs"][0]["addr"]
                         return ip
-                    except (KeyError, IndexError) as e:
+                    except (KeyError, IndexError):
                         pass
             else:
                 logger.error("Cannot get network interfaces for domain '%s' ", name)
         except libvirt.libvirtError:
             logger.error("Cannot get ip for '%s' -> %s", name, traceback.format_exc())
+        conn.close()
     else:
         logger.error("Cannot connect to libvirt ! at '%s' ", cfgvars.config["libvirt_uri"])
     logger.warning("Could not get proper ip address for domain '%s' ", name)
@@ -235,10 +234,11 @@ def create_reply(message, data, status):
     message["data"] = data
     return message
 
+
 def full_rdp():
-    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,{share_root} +auto-reconnect +clipboard '\
-              '/cert-ignore /audio-mode:1 /scale:{scale} /wm-class:"cassowaryApp-FULLSESSION" /dynamic-resolution' \
-              ' /{mflag} {rdflag} 1> /dev/null 2>&1 &'
+    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,{share_root} +auto-reconnect ' \
+              '+clipboard /cert-ignore /audio-mode:1 /scale:{scale} /wm-class:"cassowaryApp-FULLSESSION" ' \
+              '/dynamic-resolution /{mflag} {rdflag} 1> /dev/null 2>&1 &'
     multimon_enable = int(os.environ.get("RDP_MULTIMON", cfgvars.config["rdp_multimon"]))
     cmd_final = command.format(
         rdflag=cfgvars.config["rdp_flags"],
@@ -247,7 +247,7 @@ def full_rdp():
         passd=cfgvars.config["winvm_password"],
         ip=cfgvars.config["host"],
         scale=cfgvars.config["rdp_scale"],
-        rdc = cfgvars.config["full_session_client"],
+        rdc=cfgvars.config["full_session_client"],
         share_root=cfgvars.config["rdp_share_root"],
         mflag="multimon" if multimon_enable else "span"
     )
@@ -255,6 +255,7 @@ def full_rdp():
     process = subprocess.Popen(["sh", "-c", "{}".format(cmd_final)])
     process.wait()
     logger.debug("Full RDP session ended !")
+
 
 def vm_state():
     if cfgvars.config["vm_name"].strip() == "":
@@ -265,13 +266,15 @@ def vm_state():
             dom = conn.lookupByName(cfgvars.config["vm_name"])
             return int(dom.info()[0])
         except libvirt.libvirtError:
-             pass
+            pass
+        conn.close()
     return None
+
 
 def vm_suspension_handler():
     logger.debug("VM watcher active !")
-    logger.debug("VM suspend on inactivity is "+"enabled" if bool(cfgvars.config["vm_auto_suspend"]) else "disabled")
-    last_active_on = int(time.time()) # Should at least wait for one timeout
+    logger.debug("VM suspend on inactivity is " + "enabled" if bool(cfgvars.config["vm_auto_suspend"]) else "disabled")
+    last_active_on = int(time.time())  # Should at least wait for one timeout
     tc = 0
     vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
@@ -279,12 +282,12 @@ def vm_suspension_handler():
         if bool(cfgvars.config["vm_auto_suspend"]) and cfgvars.config["vm_name"].strip() != "":
             process = subprocess.check_output(["ps", "auxfww"])
             # Check if any cassowary started freerdp process is running or not
-            # print("Seconds of inactivity:", int(time.time()) - last_active_on, "Will sleep after :", cfgvars.config["vm_suspend_delay"])
-            if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1 or len(re.findall(r".*cassowary -a", process.decode())) >= 1:
+            if len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1 or len(
+                    re.findall(r".*cassowary -a", process.decode())) >= 1:
                 last_active_on = int(time.time())  # Process exists, set last active to current time and do nothing else
                 print("Process exists ! Doing nothing...")
             elif int(time.time()) - last_active_on > cfgvars.config["vm_suspend_delay"] \
-                        and not os.path.isfile(vm_suspend_file):
+                    and not os.path.isfile(vm_suspend_file):
                 bypass = False
                 # No cassowary process is running. The VM was relaunched (cassowary should remove this file if any app
                 # are run through it), and inactivity time is >= required, so put it to sleep
@@ -297,7 +300,7 @@ def vm_suspension_handler():
                         bypass = True
                         logger.debug("This vm suspend was cancelled as user attempted to launch app right now !")
                     else:
-                        os.remove(vm_app_launch_marker) # Delete marker file older than 10 sec
+                        os.remove(vm_app_launch_marker)  # Delete marker file older than 10 sec
                 logger.debug("Suspending VM due to inactivity !")
                 conn = libvirt.open(cfgvars.config["libvirt_uri"])
                 if conn is not None and bypass is False:
@@ -309,17 +312,19 @@ def vm_suspension_handler():
                         open(vm_suspend_file, "w").write(str(time.time()))
                         if cfgvars.config["send_suspend_notif"]:
                             os.system('notify-send -u normal --icon \'{icon}\' --app-name Cassowary "VM suspended"'
-                                      ' "The VM \'{vm}\' has been suspended due to {delay} seconds of inactivity !"'.format(
-                                icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gui/extrares/cassowary.png"),
-                                vm=cfgvars.config["vm_name"], delay=cfgvars.config["vm_suspend_delay"]
-                            ))
+                                      ' "The VM \'{vm}\' has been suspended due to {delay} seconds of inactivity !"'
+                                      .format(icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
+                                                                "gui/extrares/cassowary.png"),
+                                              vm=cfgvars.config["vm_name"], delay=cfgvars.config["vm_suspend_delay"]
+                                              ))
                     except libvirt.libvirtError:
                         logger.error("Could not suspend vm '%s' -> %s", cfgvars.config["vm_name"],
                                      traceback.format_exc())
+                    conn.close()
                 else:
                     if conn is not None:
                         logger.error("Cannot connect to libvirt ! at '%s'", cfgvars.config["libvirt_uri"])
-                # We also Checked if the vm suspend file exists, if it exists that means we previously suspended VM due to
+                # We also Checked if the vm suspend file exists, if it exists that means we previously suspended VM for
                 # inactivity and vm was not resumed by cassowary ! As user may be using VM directly through virt-manager
                 # , which we don't want to suspend that session, next suspension happens after next cassowary usage
             else:
@@ -329,11 +334,12 @@ def vm_suspension_handler():
             # Else, either the VM was suspended and no cassowary application has been launched since then, or we do not
             # have required inactivity duration, do nothing just wait
         time.sleep(2)
-        tc = tc+2
+        tc = tc + 2
         if tc >= 10:
             tc = 0
             logger.debug("Refreshing config to update to probable config changes !")
             cfgvars.refresh_config()
+
 
 def fix_black_window(forced=False):
     first_launch_track = "/tmp/cassowary-rdp-login-done.state"
@@ -341,32 +347,33 @@ def fix_black_window(forced=False):
         # The test window was forced or no other window was opened prevouusly
         logger.debug("Opening & closing a test window to trigger login or try to fix black screen bug on first launch")
         cmd = wake_base_cmd.format(domain=cfgvars.config["winvm_hostname"],
-                                                                    user=cfgvars.config["winvm_username"],
-                                                                    passd=cfgvars.config["winvm_password"],
-                                                                    ip=cfgvars.config["host"],
-                                                                    share_root=cfgvars.config["rdp_share_root"],
-                                                                    app="ipconfig.exe"
-                                                                    )
-        logger.debug("Trying to fix black window bug by opening a test window before requested application - "+
-                     str(time.time())+"CMDLINE: "+cmd)
+                                   user=cfgvars.config["winvm_username"],
+                                   passd=cfgvars.config["winvm_password"],
+                                   ip=cfgvars.config["host"],
+                                   share_root=cfgvars.config["rdp_share_root"],
+                                   app="ipconfig.exe"
+                                   )
+        logger.debug("Trying to fix black window bug by opening a test window before requested application - " +
+                     str(time.time()) + "CMDLINE: " + cmd)
         process = subprocess.Popen(["sh", "-c", "{}".format(cmd)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         ts = int(time.time())
         while process.poll() is None:
             for line in process.stdout:
                 if "registered device" in line.decode() or int(time.time()) - ts > 10:
                     logger.debug(
-                        "App window seems to be created or timeout. Creating marker & Waiting 2 seconds - "+str(
+                        "App window seems to be created or timeout. Creating marker & Waiting 2 seconds - " + str(
                             time.time()
                         )
                     )
                     open(first_launch_track, "w").write(str(int(time.time())))
                     logger.debug("Created a marker -> One session done")
                     # Create file to remember that one session was already done
-                    time.sleep(2)
+                    time.sleep(3)
                     process.kill()
                     break
         logger.debug("Test window opened and closed !")
     logger.debug("An app was already opened, the black window should not appear now !")
+
 
 def vm_wake():
     vm_suspend_file = "/tmp/cassowary-vm-state-suspend.state"
@@ -389,7 +396,7 @@ def vm_wake():
                     logger.debug("VM resumed..")
                     if os.path.isfile(vm_suspend_file):
                         logger.debug(
-                            "Found suspend state file... VM was auto suspended previously, clearing it for next session")
+                            "Found suspend state file.. VM was auto suspended previously, clearing it for next session")
                         os.remove(vm_suspend_file)
                     logger.debug("Added 2 sec delay for VM networking to be active !")
                     time.sleep(2)
@@ -403,6 +410,7 @@ def vm_wake():
             except libvirt.libvirtError:
                 logger.error("Could not suspend vm '%s' -> %s", cfgvars.config["vm_name"],
                              traceback.format_exc())
+            conn.close()
         else:
             logger.error("Cannot connect to libvirt ! at '%s'", cfgvars.config["libvirt_uri"])
     else:
