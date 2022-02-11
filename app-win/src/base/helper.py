@@ -46,9 +46,12 @@ def create_reply(message, data, status):
     message["data"] = data
     return message
 
+def randomstr(leng=4):
+    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(leng))
+
 
 def uac_cmd_exec(command, timeout=3, noadmin=False, non_blocking=True):
-    temp_file = os.path.join(cfgvars.tempdir, str(random.randint(11111, 999999)) + ".vbs")
+    temp_file = os.path.join(cfgvars.tempdir, randomstr(8)+ ".vbs")
     script = '''
     CreateObject("Shell.Application").ShellExecute "cmd.exe", "/c {command} > {temp_file}.out 2>&1", "", "runas", 1
     '''.format(command=command.replace('"', '""'), temp_file=temp_file.replace('"', '""'))
