@@ -175,6 +175,9 @@ class DriveShareHelper:
         status, active_shares = self.__get_shared_drives()
         shared_switched = {}
         print("Active shares: "+str(active_shares))
+        if status is None:
+            logger.error("Failed to fetch currently shared drives")
+            return False, active_shares
         for drive_letter in active_shares:
             shared_switched[active_shares[drive_letter][1]] = [active_shares[drive_letter][0], drive_letter]
         if cmd_out is None:

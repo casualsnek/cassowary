@@ -53,7 +53,7 @@ def randomstr(leng=4):
 def uac_cmd_exec(command, timeout=3, noadmin=False, non_blocking=True):
     temp_file = os.path.join(cfgvars.tempdir, randomstr(8)+ ".vbs")
     script = '''
-    CreateObject("Shell.Application").ShellExecute "cmd.exe", "/c {command} > {temp_file}.out 2>&1", "", "runas", 1
+CreateObject("Shell.Application").ShellExecute "cmd.exe", "/c {command}> {temp_file}.out 2>&1", "", "runas", 1
     '''.format(command=command.replace('"', '""'), temp_file=temp_file.replace('"', '""'))
     if not os.path.exists(cfgvars.tempdir):
         os.makedirs(cfgvars.tempdir)
@@ -63,7 +63,7 @@ def uac_cmd_exec(command, timeout=3, noadmin=False, non_blocking=True):
         os.system('wscript.exe ' + temp_file)
     else:
         if non_blocking:
-            os.system("cmd /c {command} > {temp_file}.out 2>&1".format(command=command, temp_file=temp_file))
+            os.system("cmd /c {command}> {temp_file}.out 2>&1".format(command=command, temp_file=temp_file))
         else:
             return os.popen(command).read().strip()
     command_exec_at = int(time.time())

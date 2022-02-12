@@ -24,11 +24,33 @@ Windows Registry Editor Version 5.00
     "fAllowUnlistedRemotePrograms"=dword:00000001
 
     [HKEY_CLASSES_ROOT\Directory\Background\shell\Open host terminal here\command]
-    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c open-host-term \"%V\""
+    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c open-host-term -- \"%V\""
 
     [HKEY_CLASSES_ROOT\*\shell\Open with default app on host\command]
-    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open \"%1\""
+    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open -- \"%1\""
 
     [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\cassowary.exe]
     @="C:\\Program Files\\cassowary\\cassowary.exe"
     UseUrl=dword:00000001
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\casualhXDGO]
+    "exe64"="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open --"
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\casualhXDGO\Capablities]
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\casualhXDGO\Capablities\FileAssociations]
+    ".xdgo"="casualhXDGO"
+
+    [HKEY_CLASSES_ROOT\casualhXDGO]
+    @="Cassowary Remote Launch File"
+
+    [HKEY_CLASSES_ROOT\casualhXDGO\DefaultIcon]
+    @="C:\\Program Files\\cassowary\\app.ico"
+
+    [HKEY_CLASSES_ROOT\casualhXDGO\Shell]
+
+    [HKEY_CLASSES_ROOT\casualhXDGO\Shell\Open]
+
+    [HKEY_CLASSES_ROOT\casualhXDGO\Shell\Open\Command]
+    @="wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open -- \"%1\""
+

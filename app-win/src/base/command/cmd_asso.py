@@ -1,9 +1,8 @@
 import traceback
-
+import winreg
 from ..helper import uac_cmd_exec
 from ..cfgvars import cfgvars
 from base.log import get_logger
-
 
 logger = get_logger(__name__)
 
@@ -23,10 +22,13 @@ class FileAssociation:
         # Check if ftype is set to xdg_open_handle_bin %1 if not set it
         cmd_out = uac_cmd_exec("ftype {}".format(cfgvars.config["assoc_ftype"]), noadmin=True)
         if cfgvars.config["xdg_open_handle"] not in cmd_out:
-            logger.error("Ftype not associated to app, dobule clicking file will not trigger xdg-open")
+            logger.error(
+                "Ftype not associated to app, dobule clicking file will not trigger xdg-open, Expected %s - Got: %s",
+                cfgvars.config["xdg_open_handle"],
+                cmd_out.strip())
             logger.debug("Trying to fix ftype and open command string")
             # ftype not set
-            if "no open command associated with it" in cmd_out:
+            if not cmd_out.startswith(cfgvars.config["assoc_ftype"]):
                 uac_cmd_exec("assoc .xdgo={ftype}".format(ftype=cfgvars.config["assoc_ftype"]))
             uac_cmd_exec('ftype {ftype}={launch_str}'.format(
                 ftype=cfgvars.config["assoc_ftype"],
@@ -59,13 +61,33 @@ class FileAssociation:
             return False, "Refusing to change association for this file type as this might break the system ! "
         if cmd_out is not None:
             if " association not found for extension" not in cmd_out:
-                # An ftype is associated with this extension
+                # A ftype is associated with this extension
                 old_association = cmd_out.strip().split("=")[1]
             cmd_out = uac_cmd_exec("assoc .{extension}={ftype}".format(extension=file_format,
                                                                        ftype=cfgvars.config["assoc_ftype"]
                                                                        ))
             if cmd_out is not None:
                 if cfgvars.config["assoc_ftype"] in cmd_out:
+                    # Remove persistent handler
+                    try:
+                        registry = winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT)
+                        ph = winreg.OpenKey(registry, r".{extension}".format(extension=file_format))
+                        winreg.DeleteKey(ph, "PersistentHandler")
+                        registry.Close()
+                        logger.debug("Persistent handler entry removed !")
+                    except (FileNotFoundError, OSError):
+                        logger.debug("No persistent handler for file extension '.%s' -> ERR: %s",
+                                     file_format, traceback.format_exc())
+                    # Create a value in capability with the file extension
+                    try:
+                        registry = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+                        cap = winreg.CreateKey(registry, r"SOFTWARE\casualhXDGO\Capablities\FileAssociations")
+                        winreg.SetValueEx(cap, '.{ext}'.format(ext=file_format), 0, winreg.REG_SZ,
+                                          cfgvars.config["assoc_ftype"])
+                        registry.Close()
+                        logger.debug("Capability added ")
+                    except (FileNotFoundError, OSError):
+                        logger.error("Could not associate with extension properly -> %s", traceback.format_exc())
                     # Do not remove old ftype if it already exists, else add new entry
                     cfgvars.refresh_config()
                     if file_format not in cfgvars.config["remembered_assocs"]:
@@ -94,13 +116,33 @@ class FileAssociation:
             if current_ftype == cfgvars.config["assoc_ftype"]:
                 # This file extension is associated to this tool, rollback to older ftype from backup
                 # If backup does not exist for this file extension, remove the association (Unknown file format)
-                old_ftype = ""
+                old_ftype = "unknown"
                 if file_format in cfgvars.config["remembered_assocs"]:
-                    old_ftype = cfgvars.config["remembered_assocs"][file_format]
+                    old_ftype = cfgvars.config["remembered_assocs"][file_format] if cfgvars.config["remembered_assocs"][
+                                                                                        file_format].strip() != "" else "unknown"
                 cmd_out = uac_cmd_exec("assoc .{extension}={ftype}".format(extension=file_format, ftype=old_ftype))
                 if cmd_out is not None:
                     if old_ftype in cmd_out:
                         # Un setting was successful
+                        try:
+                            registry = winreg.ConnectRegistry(None, winreg.HKEY_CLASSES_ROOT)
+                            ph = winreg.OpenKey(registry,
+                                                r".\{extension}".format(extension=file_format))
+                            winreg.DeleteKey(ph, "PersistentHandler")
+                            logger.debug("Persistent handler removed")
+                        except (FileNotFoundError, OSError):
+                            logger.debug("No persistent handler for file extension '.%s'", file_format)
+                        # Remove value in capability with the file extension
+                        try:
+                            registry = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+                            cap = winreg.OpenKey(registry,
+                                                 r"SOFTWARE\casualhXDGO\Capablities\FileAssociations")
+                            winreg.DeleteValue(cap, ".{ext}".format(ext=file_format))
+                            registry.Close()
+                            logger.debug("Capablity removed ")
+                        except (FileNotFoundError, OSError):
+                            logger.error("Could not remove association with extension properly -> %s",
+                                         traceback.format_exc())
                         if file_format in cfgvars.config["remembered_assocs"]:
                             cfgvars.config["remembered_assocs"].pop(file_format)
                             cfgvars.save_config()

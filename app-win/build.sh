@@ -4,7 +4,6 @@ checksum=""
 min_build_for=${MIN_WIN_VER:-win7}
 checksum_verification=${VERITY_DOWNLOADS:-0}
 export WINEPREFIX=/tmp/cassowary-build
-rm -rf /tmp/cassowary-build
 mkdir -p /tmp/cassowary-build
 download_python()
 {

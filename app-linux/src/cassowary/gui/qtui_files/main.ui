@@ -649,6 +649,15 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>The files extensions set here are opened with your linux host applications if they are opened
+or double click on host system. 
+If you add &quot;jpg&quot; here, it will use your linux image viewer instead of windows image viewer even if it wa opened in windows</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QTableWidget" name="tbl_associations">
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
