@@ -226,7 +226,7 @@ def main():
                                               rdc=cfgvars.config["app_session_client"],
                                               share_root=cfgvars.config["rdp_share_root"],
                                               execu="cmd.exe", icon=icon)
-                    cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
+                    cmd = cmd + '/app-cmd:"/c explorer.exe {} "'.format(path)
                     app = QApplication(sys.argv)
                     vm_wake()
                     fix_black_window()

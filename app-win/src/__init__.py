@@ -76,6 +76,10 @@ if __name__ == "__main__":
     if args.command_help:
         print(about+"\n"+action_help)
     if args.server:
+        # Clear temp file directory
+        for root, dirs, files in os.walk(cfgvars.tempdir):
+            for name in files:
+                os.remove(os.path.join(root, name))
         while True:
             try:
                 start_server(cfgvars.config["host"], cfgvars.config["port"])
@@ -83,7 +87,9 @@ if __name__ == "__main__":
             except OSError as e:
                 if "[WinError 10048]" in str(e):
                     if not args.nokill:
-                        pid = os.popen("netstat -ano | findstr :{}".format(cfgvars.config["port"])).read().strip().split()[-1]
+                        pid = os.popen("netstat -ano | findstr :{}".format(
+                            cfgvars.config["port"])
+                        ).read().strip().split()[-1]
                         os.popen("taskkill /pid {} /f".format(pid))
                     else:
                         break

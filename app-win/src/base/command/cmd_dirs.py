@@ -40,9 +40,10 @@ class DriveShareHelper:
             cmd_out = cmd_out.split("\n")
         i = 6
         active_maps = {}
-        position_local = cmd_out[3].find("Local")
-        position_remote = cmd_out[3].find("Remote")
-        position_network = cmd_out[3].find("Network")
+        nl = [y for y in cmd_out[3].split("  ") if y != ""]
+        position_local = cmd_out[3].find(nl[1])
+        position_remote = cmd_out[3].find(nl[2])
+        position_network = cmd_out[3].find(nl[3])
         while i < len(cmd_out) - 3:
             status = cmd_out[i][0:position_local].strip()
             local = cmd_out[i][position_local:position_remote].strip()
@@ -128,8 +129,9 @@ class DriveShareHelper:
         else:
             cmd_out = cmd_out.split("\n")
         i = 4
-        position_resource = cmd_out[1].find("Resource")
-        position_remark = cmd_out[1].find("Remark")
+        nl = [y for y in cmd_out[1].split("  ") if y != ""]
+        position_resource = cmd_out[1].find(nl[1])
+        position_remark = cmd_out[1].find(nl[2])
         shared_drives = {}
         while i < len(cmd_out) - 3:
             share_name = cmd_out[i][0:position_resource].strip()
