@@ -17,7 +17,7 @@ A. Open cassowary on linux, go to **"Folder Mapping"** tab Goto **"Linux->Window
 A. Run:
 
 ```bash
-$ python3 -m cassowary cassowary -c guest-run -- {path to app and arguments}
+$ python3 -m cassowary -c guest-run -- {path to app and arguments}
 ```
 
 ---
