@@ -6,7 +6,7 @@ import traceback
 from base.log import get_logger
 from base.cfgvars import cfgvars
 from base.helper import create_reply, create_request
-import logging
+
 
 logger = get_logger(__name__)
 

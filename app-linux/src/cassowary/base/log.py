@@ -4,6 +4,7 @@ from .cfgvars import cfgvars
 import sys
 import os
 
+
 class DuplicateFilter(logging.Filter):
     def filter(self, record):
         # add other fields if you need more granular comparison, depends on your app
@@ -12,6 +13,7 @@ class DuplicateFilter(logging.Filter):
             self.last_log = current_log
             return True
         return False
+
 
 def get_logger(name):
     log_level = int(os.environ.get("LOG_LEVEL", 1))

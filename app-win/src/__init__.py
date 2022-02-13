@@ -1,5 +1,4 @@
 import argparse
-import logging
 import os
 import sys
 from base.command import register_all

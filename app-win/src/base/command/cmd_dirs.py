@@ -262,6 +262,7 @@ class DriveShareHelper:
                 status, message = self.__add_new_share(cmd[1], cmd[2])
                 return status, message
             except IndexError:
+                logger.warning("Failed creating drive share. Params: %s", str(cmd))
                 return False, "Command 'add-drive-share' is missing parameter. Required: drive_letter, share_name "
         elif cmd[0] == "get-drive-shares":
             status, message = self.__get_shared_drives(no_hostname=True)
@@ -271,12 +272,14 @@ class DriveShareHelper:
                 status, message = self.__remove_share(cmd[1])
                 return status, message
             except IndexError:
+                logger.warning("Failed removing drive share. Params: %s", str(cmd))
                 return False, "Command 'rem-drive-share' is missing parameter. Required: share_name/drive_letter "
         elif cmd[0] == "add-network-map":
             try:
                 status, message = self.__add_new_map(cmd[1], cmd[2], cmd[3])
                 return status, message
             except IndexError:
+                logger.warning("Failed adding network map. Params: %s", str(cmd))
                 return False, "Command 'add-network-map' missing parameter. Required: host_path, network_location, " \
                               "drive_letter "
         elif cmd[0] == "get-network-map":
@@ -287,6 +290,7 @@ class DriveShareHelper:
                 status, message = self.__remove_map(cmd[1])
                 return status, message
             except IndexError:
+                logger.warning("Failed removing network map. Params: %s", str(cmd))
                 return False, "Command 'rem-network-map' is missing parameter. Required: network_location/drive_letter"
         else:
             return False, None

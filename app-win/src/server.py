@@ -6,7 +6,6 @@ from base.helper import create_reply, randomstr
 import threading
 import socket
 import json
-import logging
 import traceback
 
 logger = get_logger(__name__)
@@ -213,7 +212,6 @@ def start_server(host, port):
                         logger.debug("Client Thread '%s' has stopped listening, removing it", client.name)
                         del clients[clients.index(client)]
             except socket.timeout:
-                logger.info("Timeout ! Looking for clients again...")
                 pass
     except KeyboardInterrupt:
         logger.debug("Got keyboard interrupt")

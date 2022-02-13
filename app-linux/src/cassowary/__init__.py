@@ -215,7 +215,7 @@ def main():
                     path = path_translate_to_guest(args.cmdline[0])
                     if " " in path:
                         # This looks ugly because windows uses "" for escaping " instead of \" and this is the
-                        # only way i found so far
+                        # only way I found so far
                         path = '\\"\\"\\"{}\\"\\"\\"'.format(path)
                     cmd = BASE_RDP_CMD.format(rdflag=cfgvars.config["rdp_flags"],
                                               domain=cfgvars.config["winvm_hostname"],
@@ -226,7 +226,11 @@ def main():
                                               rdc=cfgvars.config["app_session_client"],
                                               share_root=cfgvars.config["rdp_share_root"],
                                               execu="cmd.exe", icon=icon)
-                    cmd = cmd + '/app-cmd:"/c explorer.exe {} "'.format(path)
+                    #                               |--- This is ugly too but without this path with spaces wont work
+                    #                               |----------------|
+                    #                               V                V
+                    cmd = cmd + '/app-cmd:"/c start \\"\\"\\"\\"\\"\\" {} "'.format(path)
+                    cmd = cmd + " 1> /dev/null 2>&1 &"
                     app = QApplication(sys.argv)
                     vm_wake()
                     fix_black_window()
