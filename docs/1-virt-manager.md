@@ -38,7 +38,7 @@ Now, to carry modifications on every AppArmor update, the following changes won'
 The file can be edited via terminal with the following command:
 
 ```bash
-$ echo $'profile libvirt_leaseshelper {\n\tinclude <abstractions/base>\n\t/usr/libexec/libvirt_leaseshelper mr,\n}' >> /etc/apparmor.d/local/usr.sbin.dnsmasq 
+$ echo $'profile libvirt_leaseshelper {\n\tinclude <abstractions/base>\n\t/usr/libexec/libvirt_leaseshelper mr,\n}' | sudo tee -a /etc/apparmor.d/local/usr.sbin.dnsmasq > /dev/null
 ```
 
 You can now go to the next section, where `libvirt.conf` is created.
