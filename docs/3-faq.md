@@ -16,7 +16,7 @@ A. Open cassowary on linux, go to **"Folder Mapping"** tab Goto **"Linux->Window
 
 A. Run:
 
-```
+```bash
 $ python3 -m cassowary -c guest-run -- {path to app and arguments}
 ```
 
@@ -44,7 +44,7 @@ A. Since cassowary wont launch without a user being logged in, try launching any
 
 A. Make sure you have setup background service autostart (logout and login is required after clicking on setup button). You can also try manually launching background service using:
 
-```
+```bash
 $ python -m cassowary -bc
 ```
 
