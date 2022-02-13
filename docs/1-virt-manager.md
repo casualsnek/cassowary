@@ -6,13 +6,13 @@ The instructions are written mainly for Arch Linux, so be sure to adapt them to 
 
 ### We start by installing virt-manager and KVM
 
-```
+```bash
 $ sudo pacman -S virt-manager
 ```
 
 ### Making KVM run without root access
 
-```
+```bash
 $ sudo sed -i "s/#user = \"root\"/user = \"$(id -un)\"/g" /etc/libvirt/qemu.conf
 $ sudo sed -i "s/#group = \"root\"/group = \"$(id -gn)\"/g" /etc/libvirt/qemu.conf
 $ sudo usermod -a -G kvm $(id -un)
@@ -23,23 +23,37 @@ $ sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
 
 ### Making network available with AppArmor enabled
 
-On some Linux distribution, if AppArmor is enabled, it is necessary to modify the file `/etc/apparmor.d/usr.sbin.dnsmasq` to be able to connect to the network or virt-manager will throw a segmentation fault.
+On some Linux distribution if AppArmor is enabled it is necessary to modify the file `/etc/apparmor.d/usr.sbin.dnsmasq`, or eventually a file with the same name located in the AppArmor's `local` folder, to be able to connect to the network or virt-manager will throw a segmentation fault.
 
-If you can't find this profile, be sure to install every additional packages regarding AppArmor profiles.  
+If you can't find the `dnsmasq` profile, be sure to install every additional packages regarding AppArmor profiles.  
 If you can't still find the `dnsmasq` profile, you can always download it from from [AppArmor gitlab](https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq) and copy it to the right location:
 
-```
+```bash
 $ wget https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq -O ~/usr.sbin.dnsmasq
 $ sudo mv ~/usr.sbin.dnsmasq /etc/apparmor.d/
 ```
 
-Now you have to modify this profile by adding a `r` at the end of line 116, before the comma, so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
+Now, to carry modifications on every AppArmor update, the following changes won't be made on this file directly, but rather to a file with the same name located in `/etc/apparmor.d/local/` folder.
+
+The file can be edited via terminal with the following command:
+
+```bash
+$ echo $'profile libvirt_leaseshelper {\n\tinclude <abstractions/base>\n\t/usr/libexec/libvirt_leaseshelper mr,\n}' >> /etc/apparmor.d/local/usr.sbin.dnsmasq 
+```
+
+You can now go to the next section, where `libvirt.conf` is created.
+
+&nbsp;
+
+If you still prefer to modify the main profile, you will have to add a `r` at the end of line 116, before the comma, so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
 
 This can also be done via terminal:
 
-```
+```bash
 $ sudo sed -i "s/\/usr\/libexec\/libvirt_leaseshelper m,/\/usr\/libexec\/libvirt_leaseshelper mr,/g" /etc/apparmor.d/usr.sbin.dnsmasq
 ```
+
+Remember that those changes should be repeated on every AppArmor update.
 
 ### Create libvirt.conf
 
@@ -47,7 +61,7 @@ On some Linux distribution is better to create a config file to make sure the de
 
 To do this create the folder `~/.config/libvirt/` and inside this folder create the `libvirt.conf` with `uri_default = "qemu:///system"`
 
-```
+```bash
 $ mkdir -p ~/.config/libvirt
 $ echo "uri_default = \"qemu:///system\"" >> ~/.config/libvirt/libvirt.conf
 ```
@@ -99,7 +113,7 @@ and save them in a convenient location.
 
 - Goto XML tab of CPU and replace the section:
 
-```
+```xml
 <clock offset="localtime">
     .......
     .......
@@ -108,7 +122,7 @@ and save them in a convenient location.
 
 with:
 
-```
+```xml
 <clock offset="localtime">
   <timer name="hpet" present="yes"/>
   <timer name="hypervclock" present="yes"/>

@@ -36,10 +36,10 @@ This step is ONLY necessary if you don't want to use the releases from the [rele
 
 #### Building linux application (on Linux)
 
-```
+```bash
 $ git clone https://github.com/casualsnek/cassowary
 $ cd cassowary/app-linux
-# chmod +x build.sh
+$ chmod +x build.sh
 $ ./build.sh
 ```
 
@@ -49,10 +49,10 @@ This will create a directory named `dist` inside `app-linux` directory containin
 
 Download and install [Python3](https://python.org) (If on Windows 7 use Python 3.7) and [Git](https://git-scm.com) on the Windows system then run the commands:
 
-```
-git clone https://github.com/casualsnek/cassowary
-cd cassowary\app-win
-.\build.bat
+```bash
+$ git clone https://github.com/casualsnek/cassowary
+$ cd cassowary\app-win
+$ .\build.bat
 ```
 
 This will create a directory named `bin` containing the setup files. 
@@ -62,26 +62,17 @@ This will create a directory named `bin` containing the setup files.
 Install [wine](https://wiki.winehq.org/Download) first, in order to build Windows application on Linux. Internet access is required to download the python binary for setup. 
 Note that Windows application built through wine may fail to run properly on some Windows systems.
 
-```
+```bash
 $ git clone https://github.com/casualsnek/cassowary
 $ cd cassowary
+$ chmod +x buildall.sh
 $ ./buildall.sh
-```
-
-If `buildall.sh` produces an error such as `bash: ./buildall.sh: Permission denied`, run this command:
-
-```
-chmod +x buildall.sh
-```
-
-and then run the following again:
-
-```
-./buildall.sh
 ```
 
 This will create a `dist` folder inside `app-linux` which contains the installable wheel file.  
 A `bin` folder will also be created inside `app-win` containing the setup files for Windows.
+
+<br>
 
 ## How can I help?
 

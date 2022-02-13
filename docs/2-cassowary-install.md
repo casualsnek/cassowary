@@ -17,14 +17,14 @@ Here we will be using Arch Linux. You can easily find equivalent commands for yo
 - Open terminal on the location where you downloaded the `.whl` file;  
 - Install `python3`, `python3-pip`, `freerdp2`, `libvirt-python3` packages and dependencies by running following commands on terminal:
 
-```
+```bash
 $ sudo pacman -S python3 python3-pip freerdp libvirt-python
 $ pip3 install PyQt5
 ```
 
 - Install the downloaded `.whl` file by running:
 
-```
+```bash
 $ pip install cassowary*
 ```
 
@@ -36,7 +36,7 @@ $ pip install cassowary*
 
 - Launch cassowary configuration utility with:
 
-```
+```bash
 $ python3 -m cassowary -a
 ```
 
@@ -49,7 +49,7 @@ $ python3 -m cassowary -a
 Now you can find application on your application menu which you can use to launch apps easily
 You can explore other commandline usage of cassowary by running:
 
-```
+```bash
 $ python -m cassowary -h
 ```
 
