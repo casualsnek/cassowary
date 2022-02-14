@@ -946,7 +946,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>320</y>
+             <y>310</y>
              <width>261</width>
              <height>17</height>
             </rect>
@@ -1287,6 +1287,32 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
            </property>
            <property name="text">
             <string>:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lb_enablesoftlaunch">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>380</y>
+             <width>281</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Prefer using server to launch applications</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="inp_softlaunch">
+           <property name="geometry">
+            <rect>
+             <x>300</x>
+             <y>380</y>
+             <width>251</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable</string>
            </property>
           </widget>
          </widget>
