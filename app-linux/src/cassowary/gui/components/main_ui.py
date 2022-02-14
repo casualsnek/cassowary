@@ -254,6 +254,7 @@ Version=1.0
         cfgvars.config["winshare_mount_root"] = os.path.abspath(self.inp_mountroot.text())
         cfgvars.config["vm_suspend_delay"] = self.inp_sleepd.value()
         cfgvars.config["vm_auto_suspend"] = 1 if self.inp_enbsuspend.isChecked() else 0
+        cfgvars.config["soft_launch"] = 1 if self.inp_softlaunch.isChecked() else 0
         cfgvars.config["send_suspend_notif"] = 1 if self.inp_susnotif.isChecked() else 0
         cfgvars.config["app_session_client"] = self.inp_apprdc.currentText()
         cfgvars.config["full_session_client"] = self.inp_fullrdc.currentText()
@@ -277,6 +278,7 @@ Version=1.0
         self.inp_sleepd.setValue(cfgvars.config["vm_suspend_delay"])
         self.inp_enbsuspend.setChecked(bool(cfgvars.config["vm_auto_suspend"]))
         self.inp_susnotif.setChecked(bool(cfgvars.config["send_suspend_notif"]))
+        self.inp_softlaunch.setChecked(bool(cfgvars.config["soft_launch"]))
         self.inp_rdpscale.setValue({100: 0, 140: 1, 180: 2}[cfgvars.config["rdp_scale"]])
         self.inp_rdpmultimon.setChecked(bool(cfgvars.config["rdp_multimon"]))
 

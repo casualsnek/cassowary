@@ -38,6 +38,7 @@ class Vars:
             "winshare_mount_root": os.path.join("/", "mnt", self.app_name),
             "eom": "~~!enm!~~",
             "logfile": os.path.join(self.config_dir, self.app_name + ".log"),
+            "soft_launch": 1
         }
         self.refresh_config()
         self.__check_config()

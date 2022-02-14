@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication
 from .gui.components.main_ui import MainWindow
 from .client import Client
 import threading
+import re
 
 
 
@@ -179,60 +180,98 @@ def main():
                     print(path_translate_to_guest(args.cmdline[0]))
                 elif args.command == "guest-run":
                     translated_paths = [path_translate_to_guest(argument) for argument in args.cmdline]
-                    print(translated_paths)
                     # Check and translated every argument if it is a path
-                    cmd = BASE_RDP_CMD.format(rdflag=cfgvars.config["rdp_flags"],
-                                              domain=cfgvars.config["winvm_hostname"],
-                                              user=cfgvars.config["winvm_username"],
-                                              passd=cfgvars.config["winvm_password"],
-                                              ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
-                                              mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
-                                              rdc=cfgvars.config["app_session_client"],
-                                              share_root=cfgvars.config["rdp_share_root"],
-                                              execu=args.cmdline[0], icon=icon)
-
-                    if len(translated_paths) > 1:
-                        rd_app_args = ""
-                        for path in translated_paths[1:]:
-                            if " " in path:
-                                # This looks ugly because windows uses "" for escaping " instead of \" and this is the
-                                # only way i found so far
-                                path = '\\"\\"\\"{}\\"\\"\\"'.format(path)
-                            rd_app_args = rd_app_args + path + " "
-                        # Now problem for path with spaces is solved, but the path pointing to drive's root
-                        #                               | DO NOT REMOVE THIS SPACE or else path pointing to drive letter
-                        #                      |--------| (C:| or D:| ) will not launch due to \ at end escaping the
-                        #                      V        | ending quote
-                        cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
-                    #cmd = cmd + " 1> /dev/null 2>&1 &"
                     app = QApplication(sys.argv)
+                    process = subprocess.check_output(["ps", "auxfww"])
                     vm_wake()
-                    fix_black_window()
-                    logger.debug("guest-run with commandline: "+cmd)
-                    process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
-                    process.wait()
+                    if cfgvars.config["soft_launch"] and \
+                            len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
+                        # Use soft launch:
+                        command_and_args = ""
+                        for argument in translated_paths:
+                            if " " in argument:
+                                command_and_args = command_and_args+'"{}" '.format(argument)
+                            else:
+                                command_and_args = command_and_args + argument + " "
+                        logger.debug("Using soft launch as other RDP application is active")
+                        client__ = Client(cfgvars.config["host"], cfgvars.config["port"])
+                        client__.init_connection()
+                        response = client__.send_wait_response(
+                            ['run-app', 'cmd.exe /c start "" {}'.format(command_and_args)],
+                            timeout=10
+                        )
+                        logger.debug("Got soft launch response: %s", str(response))
+                        print(response)
+                    else:
+                        cmd = BASE_RDP_CMD.format(rdflag=cfgvars.config["rdp_flags"],
+                                                  domain=cfgvars.config["winvm_hostname"],
+                                                  user=cfgvars.config["winvm_username"],
+                                                  passd=cfgvars.config["winvm_password"],
+                                                  ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
+                                                  mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
+                                                  rdc=cfgvars.config["app_session_client"],
+                                                  share_root=cfgvars.config["rdp_share_root"],
+                                                  execu=args.cmdline[0], icon=icon)
+                        if len(translated_paths) > 1:
+                            rd_app_args = ""
+                            for path in translated_paths[1:]:
+                                if " " in path:
+                                    # This looks ugly because windows uses "" for escaping " instead of \" and this is
+                                    # the only way I found so far
+                                    path = '\\"\\"\\"{}\\"\\"\\"'.format(path)
+                                rd_app_args = rd_app_args + path + " "
+                            # Now problem for path with spaces is solved, but the path pointing to drive's root
+                            #                          | DO NOT REMOVE THIS SPACE or else path pointing to drive letter
+                            #                      |---| (C:| or D:| ) will not launch due to \ at end escaping the
+                            #                      V   | ending quote
+                            cmd = cmd + '/app-cmd:"{} "'.format(rd_app_args.strip())
+                        # cmd = cmd + " 1> /dev/null 2>&1 &"
+                        fix_black_window()
+                        logger.debug("guest-run with commandline: "+cmd)
+                        process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
+                        process.wait()
                 elif args.command == "guest-open":
                     path = path_translate_to_guest(args.cmdline[0])
-                    if " " in path:
-                        # This looks ugly because windows uses "" for escaping " instead of \" and this is the
-                        # only way i found so far
-                        path = '\\"\\"\\"{}\\"\\"\\"'.format(path)
-                    cmd = BASE_RDP_CMD.format(rdflag=cfgvars.config["rdp_flags"],
-                                              domain=cfgvars.config["winvm_hostname"],
-                                              user=cfgvars.config["winvm_username"],
-                                              passd=cfgvars.config["winvm_password"],
-                                              ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
-                                              mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
-                                              rdc=cfgvars.config["app_session_client"],
-                                              share_root=cfgvars.config["rdp_share_root"],
-                                              execu="cmd.exe", icon=icon)
-                    cmd = cmd + '/app-cmd:"/c start {} "'.format(path)
                     app = QApplication(sys.argv)
+                    process = subprocess.check_output(["ps", "auxfww"])
                     vm_wake()
-                    fix_black_window()
-                    logger.debug("guest-open with commandline: " + cmd)
-                    process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
-                    process.wait()
+                    if cfgvars.config["soft_launch"] and \
+                            len(re.findall(r"freerdp.*\/wm-class:.*cassowaryApp", process.decode())) >= 1:
+                        # Use soft launch
+                        if " " in path:
+                            path = '"{}"'.format(path)
+                        logger.debug("Using soft launch as other RDP application is active")
+                        client__ = Client(cfgvars.config["host"], cfgvars.config["port"])
+                        client__.init_connection()
+                        response = client__.send_wait_response(
+                            ['run-app', 'cmd.exe /c start "" {} '.format(path)],
+                            timeout=10
+                        )
+                        logger.debug("Got soft launch response: %s", str(response))
+                        print(response)
+                    else:
+                        if " " in path:
+                            # This looks ugly because windows uses "" for escaping " instead of \" and this is the
+                            # only way I found so far
+                            path = '\\"\\"\\"{}\\"\\"\\"'.format(path)
+                        cmd = BASE_RDP_CMD.format(rdflag=cfgvars.config["rdp_flags"],
+                                                  domain=cfgvars.config["winvm_hostname"],
+                                                  user=cfgvars.config["winvm_username"],
+                                                  passd=cfgvars.config["winvm_password"],
+                                                  ip=cfgvars.config["host"], scale=cfgvars.config["rdp_scale"],
+                                                  mflag="multimon" if multimon_enable else "span", wmclass=wm_class,
+                                                  rdc=cfgvars.config["app_session_client"],
+                                                  share_root=cfgvars.config["rdp_share_root"],
+                                                  execu="cmd.exe", icon=icon)
+                        #                              |--- This is ugly too but without this path with spaces wont work
+                        #                              |----------------|
+                        #                              V                V
+                        cmd = cmd + '/app-cmd:"/c start \\"\\"\\"\\"\\"\\" {} "'.format(path)
+                        # cmd = cmd + " 1> /dev/null 2>&1 &"
+                        fix_black_window()
+                        logger.debug("guest-open with commandline: " + cmd)
+                        process = subprocess.Popen(["sh", "-c", "{}".format(cmd)])
+                        process.wait()
                 elif args.command == "raw-cmd":
                     vm_wake()
                     client__ = Client(cfgvars.config["host"], cfgvars.config["port"])

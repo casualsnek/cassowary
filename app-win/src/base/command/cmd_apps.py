@@ -29,7 +29,7 @@ class ApplicationData:
         except:
             description = "unknown"
             version = "unknown"
-        # TODO: Remove None and use different function to get app icons !
+            logger.warning("Failed to get version information for '%s' : %s", path_to_exe, traceback.format_exc())
         return [description, version]
 
     @staticmethod
@@ -42,6 +42,7 @@ class ApplicationData:
         except:
             img_str = ""
         return img_str
+
     @staticmethod
     def __find_installed():
         logger.debug("Getting list of installed applications")
@@ -54,7 +55,7 @@ class ApplicationData:
             except FileNotFoundError:
                 # If the Key does not exist instead of throwing an exception safely ignore it
                 pass
-            # Open the directories on App Path -Accessing requires a defined integer, so we loop Until we get WinError 259
+            # Open the directories on App Path -Accessing requires a defined integer, we loop Until we get WinError 259
             for n in range(1000):
                 try:
                     app_entry = winreg.OpenKey(app_path_key, winreg.EnumKey(app_path_key, n))

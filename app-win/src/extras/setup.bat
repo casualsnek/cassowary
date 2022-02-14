@@ -67,6 +67,7 @@
  Xcopy /I /Y cassowary_nw.vbs "C:\Program Files\cassowary\"
  Xcopy /I /Y nowindow.vbs "C:\Program Files\cassowary\"
  Xcopy /I /Y hostopen.bat "C:\Program Files\cassowary\"
+ Xcopy /I /Y app.ico "C:\Program Files\cassowary\"
  echo "==> Importing registry keys"
  reg import setup.reg
  echo "==> Setting up path variables"

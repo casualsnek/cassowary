@@ -10,6 +10,9 @@ pyinstaller package.spec --noconfirm
 echo ==^> Copying to setup directory
 mkdir ..\bin
 Xcopy /E /I /F /Y dist\cassowary ..\bin\cassowary
-Xcopy /Y extras\* ..\bin\
+Xcopy /Y /I /F /Y extras\* ..\bin\
+del ..\bin\app.svg
+rmdir /s /q build
+rmdir /s /q dist
 cd ..\
 echo ==^> Done...
