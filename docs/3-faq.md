@@ -1,4 +1,4 @@
-# 3. Extra How to's and FAQ
+# 3. Extra How to(s) and FAQ(s)
 
 **Q. Launch terminal/Open on host on Windows file manager says drive is not shared?**
 
