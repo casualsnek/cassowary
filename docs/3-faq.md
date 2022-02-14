@@ -24,7 +24,7 @@ $ python3 -m cassowary -c guest-run -- {path to app and arguments}
 
 **Q. How do I set links and files on Windows to open on Linux host application?**
 
-A. Set the default app for a file type or default browser to `C:\Program Files\cassowary\hostopen.bat`
+A. Set the default app for a file type or default browser to `C:\Program Files\cassowary\hostopen.bat`( if file type 'Launch on host' tab is recommended way to set this up ) 
 
 ---
 
@@ -47,6 +47,12 @@ A. Make sure you have setup background service autostart (logout and login is re
 ```bash
 $ python -m cassowary -bc
 ```
+
+---
+
+**Q. Setting file extension on 'Launch on host' does not automatically open it with host application **
+
+A. Make sure background service shortcut is created and is runing, For an extension with app to open it already installed will cause windows to show dialog to choose default app. Select 'Windows script host' on the shown dialog.
 
 ---
 
