@@ -79,3 +79,4 @@ A `bin` folder will also be created inside `app-win` containing the setup files 
 - Improve the README.md and/or the documentation
 - Report bugs or submit patches
 - Suggest new features or improvements on existing ones!
+- Supporting on [OpenCollective](https://opencollective.com/cassowary)
