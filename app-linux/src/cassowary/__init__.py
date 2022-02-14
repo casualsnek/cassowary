@@ -230,7 +230,7 @@ def main():
                     #                               |----------------|
                     #                               V                V
                     cmd = cmd + '/app-cmd:"/c start \\"\\"\\"\\"\\"\\" {} "'.format(path)
-                    cmd = cmd + " 1> /dev/null 2>&1 &"
+                    #cmd = cmd + " 1> /dev/null 2>&1 &"
                     app = QApplication(sys.argv)
                     vm_wake()
                     fix_black_window()

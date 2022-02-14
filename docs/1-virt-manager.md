@@ -68,6 +68,10 @@ VirtIO driver will improve the VM performance while having lowest overhead.
 
 and save them in a convenient location.
 
+
+Note: If you are using windows7 you don't need to download virtio iso as it is not supported. Skip the steps after Memory allocation  and continue installing normally.
+
+
 ### Creating a Virtual Machine
 
 - Open virt-manager from your application menu
