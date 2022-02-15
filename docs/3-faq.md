@@ -50,12 +50,17 @@ $ python -m cassowary -bc
 
 ---
 
-**Q. Setting file extension on 'Launch on host' does not automatically open it with host application **
+**Q. Setting file extension on 'Launch on host' does not automatically open it with host application**
 
 A. Make sure background service shortcut is created and is runing, For an extension with app to open it already installed will cause windows to show dialog to choose default app. Select 'Windows script host' on the shown dialog.
 
 ---
 
+**Q. New application does not create a taskbar entry.**
+
+A. Disable taskbar application grouping, Also, If you are using v0.6+, try navigating to advanced tab and disable 'Prefer using server to launch applications' this may solve this issue !
+
+---
 **Q. I have found a bug/issue, have a suggestion or I have questions not answered here!**
 
 A. Feel free to [open an issue here](https://github.com/casualsnek/cassowary/issues)!
