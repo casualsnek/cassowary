@@ -38,14 +38,14 @@ Now, to carry modifications on every AppArmor update, the following changes won'
 The file can be edited via terminal with the following command:
 
 ```bash
-$ echo $'profile libvirt_leaseshelper {\n\tinclude <abstractions/base>\n\t/usr/libexec/libvirt_leaseshelper mr,\n}' | sudo tee -a /etc/apparmor.d/local/usr.sbin.dnsmasq > /dev/null
+$ echo $'/usr/libexec/libvirt_leaseshelper mr,' | sudo tee -a /etc/apparmor.d/local/usr.sbin.dnsmasq > /dev/null
 ```
 
 You can now go to the next section, where `libvirt.conf` is created.
 
 &nbsp;
 
-If you still prefer to modify the main profile, you will have to add a `r` at the end of line 116, before the comma, so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
+If you still prefer to modify the main profile, you will have to add a `r` at the end of the line about `libvirt_leaseshelper` , so it will be like: `/usr/libexec/libvirt_leaseshelper mr,`.
 
 This can also be done via terminal:
 
@@ -78,13 +78,11 @@ VirtIO driver will improve the VM performance while having lowest overhead.
 
 - Download Windows isos from: [HERE](https://tb.rg-adguard.net/public.php)
 
-- Download latest virtio driver iso images from: [HERE](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
+- Download latest VirtIO driver iso images from: [HERE](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
+
+> If you are using Windows 7 you don't need to download VirtIO iso as it is not supported.
 
 and save them in a convenient location.
-
-
-Note: If you are using windows7 you don't need to download virtio iso as it is not supported. Skip the steps after Memory allocation  and continue installing normally.
-
 
 ### Creating a Virtual Machine
 
@@ -140,8 +138,10 @@ with:
 - In the Boot Options tab you could check **Start the virtual machine on host bootup** if you would like the VM to boot automatically at your PC boot;
 
 - In the SATA Disk 1 tab set the **Disk bus** to **VirtIO**;  
-  
-  <img src="img/virt-manager-7.png" alt="virt-manager-7">
+
+> If you are using Windows 7 skip this step as VirtIO is not supported.
+
+<img src="img/virt-manager-7.png" alt="virt-manager-7">
 
 - Move over to NIC section and set **Device Model** to **virtio**;  
   
