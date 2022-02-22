@@ -149,7 +149,7 @@ with:
 
 - After that your drive will show and you can continue like a normal Windows 10 installation;
 - After some time you will get to "Let's connect to internet page", click on **I dont have internet** at bottom left and continue with limited setup;
-- Set you username and password;
+- Set you username and password. The Password is not allowed to be blank;
 - After you get to Windows 10 desktop open This PC and browse to virtio-win CD drive and install **virtio-win-gt-x64.exe**;
 - It's also suggested to install the [spice guest tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe) to also enable copy-paste between host and guest;
 - Shut down the VM and from the menu bar select **View** and then **Details**;
