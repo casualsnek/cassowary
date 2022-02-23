@@ -62,6 +62,12 @@ A. Disable taskbar application grouping, Also, If you are using v0.6+, try navig
 
 ---
 
+**Q. There is no internet in VM.**
+
+A. This happens if you have a VPN running on host, try disabling VPN and internet should work on VM !
+
+---
+
 **Q. I have found a bug/issue, have a suggestion or I have questions not answered here!**
 
 A. Feel free to [open an issue here](https://github.com/casualsnek/cassowary/issues)!
