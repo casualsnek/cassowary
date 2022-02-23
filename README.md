@@ -16,13 +16,13 @@ Please give a star ⭐ or follow this project if you find it useful.
 
 ## Cassowary supports:
 
-- Running Windows application as if they were native application
+- Running Windows applications as if they were native applications
 - Opening files from a Linux host directly inside Windows applications
 - Using Linux apps to open files that are on a Windows VM
 - Allowing easy access between both the guest and host filesystems
 - An easy-to-use configuration utility
 - Creating an application launcher for Windows application
-- Automatically suspending the VM when no Windows application is in use and automatically resume it when required (virt-manager only)
+- Automatically suspending the VM when no Windows application is in use and automatically resuming it when required (virt-manager only)
 
 ## This README consists of instructions for:
 
@@ -83,7 +83,7 @@ A `bin` folder will also be created inside `app-win` containing the setup files 
 - Improve the README.md and/or the documentation
 - Report bugs or submit patches
 - Suggest new features or improvements on existing ones!
-- Supporting on [OpenCollective](https://opencollective.com/cassowary)
+- Support this project on [OpenCollective](https://opencollective.com/cassowary)
 
 ---
 ### Backers
