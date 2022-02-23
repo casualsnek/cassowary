@@ -80,3 +80,7 @@ A `bin` folder will also be created inside `app-win` containing the setup files 
 - Report bugs or submit patches
 - Suggest new features or improvements on existing ones!
 - Supporting on [OpenCollective](https://opencollective.com/cassowary)
+
+---
+### Backers
+![Project Backers](https://opencollective.com/cassowary/tiers/backer.svg?avatarHeight=36&width=600)
