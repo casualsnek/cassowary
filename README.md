@@ -1,4 +1,8 @@
-# <img src="app-linux/src/cassowary/gui/extrares/cassowary.svg" alt="Logo" width="200"/>  Cassowary
+<p align="center">
+  <img src="app-linux/src/cassowary/gui/extrares/cassowary.svg" alt="Logo" width="200" align="center"/> <p style="color:blue;font-size:64px;">
+</p>
+
+# Cassowary
 
 [![Visits Badge](https://badges.pufler.dev/visits/casualsnek/cassowary)](https://github.com/casualsnek)
 
