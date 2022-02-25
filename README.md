@@ -86,5 +86,9 @@ A `bin` folder will also be created inside `app-win` containing the setup files 
 - Support this project on [OpenCollective](https://opencollective.com/cassowary)
 
 ---
+
+### Sponsors
+[![Sponsors](https://opencollective.com/cassowary/tiers/sponsor.svg?avatarHeight=36&width=600)](https://opencollective.com/cassowary)
+
 ### Backers
-![Project Backers](https://opencollective.com/cassowary/tiers/backer.svg?avatarHeight=36&width=600)
+[![Backers](https://opencollective.com/cassowary/tiers/backer.svg?avatarHeight=36&width=600)](https://opencollective.com/cassowary)
