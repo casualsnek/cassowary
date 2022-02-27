@@ -19,6 +19,7 @@ class Vars:
             "eom": "~~!enm!~~",
             "logfile": os.path.join(self.config_dir, self.app_name + ".log"),
             "host": "0.0.0.0",
+            "tracked_installations": [],
             "assoc_ftype": "casualhXDGO",
             "xdg_open_handle": "wscript.exe \"C:\\Program Files\\cassowary\\cassowary_nw.vbs\" -c xdg-open -- \"%1\"",
         }

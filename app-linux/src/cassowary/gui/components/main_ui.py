@@ -17,6 +17,7 @@ import re
 
 logger = get_logger(__name__)
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -39,9 +40,9 @@ class MainWindow(QMainWindow):
         self.btn_savegconf_2.clicked.connect(self.__save_vminfo) # Advanced and vminfo buttons are same
         self.btn_newmap.clicked.connect(lambda: AddMapDialog().run(self.client, self.populate_mappings))
         self.btn_newshare.clicked.connect(lambda: AddShareDialog().run(self.client, self.populate_shares))
-        self.btn_mountall.clicked.connect(mount_pending)
+        self.btn_mountall.clicked.connect(mount_pending, on_complete=self.populate_shares)
         self.btn_ipautodetect.clicked.connect(self.__ip_auto_fill)
-        self.btn_unmountall.clicked.connect(unmount_all)
+        self.btn_unmountall.clicked.connect(unmount_all, on_complete=self.populate_shares)
         self.btn_choosemountroot.clicked.connect(self.__set_mount_dir)
         self.btn_chooseshareroot.clicked.connect(self.__set_shared_dir)
         self.btn_newassoc.clicked.connect(self.add_association)
@@ -54,8 +55,7 @@ class MainWindow(QMainWindow):
         self.btn_vmoff.clicked.connect(lambda: os.popen("virsh poweroff {}".format(cfgvars.config["vm_name"])))
         self.btn_closesessions.clicked.connect(lambda: self.client.send_wait_response(["close-sessions"], timeout=4))
         self.btn_serverstop.clicked.connect(lambda: self.client.send_wait_response(["close-server"], timeout=4))
-        self.btn_setupautostart.clicked.connect(self.__create_autostart)
-        self.btn_createdesktop.clicked.connect(self.__create_menu_item)
+        self.btn_createdesktop.clicked.connect(self.__create_shortcuts)
 
         self.main_tabs.currentChanged.connect(self.__tab_changed)
         self.tab_mappings0.currentChanged.connect(self.__mapping_tab_changed)
@@ -65,52 +65,30 @@ class MainWindow(QMainWindow):
 
         self.populate_general()
 
-    def __create_autostart(self):
-        desktop_item = """[Desktop Entry]
-Comment=Cassowary Background Service
-Encoding=UTF-8
-Exec=python -m cassowary -bc
-GenericName=cassowary-service
-Icon={icon}
-Name[en_US]=Cassowary Background Service
-Name=Cassowary Background Service
-Categories=Utility
-StartupNotify=true
-Terminal=false
-TerminalOptions=
-Type=Application
-Version=1.0
-""".format(icon=os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "extrares", "cassowary.png"))
-        app_dir = os.path.join(os.path.expanduser("~"), ".config", "autostart")
-        if not os.path.exists(app_dir):
-            os.makedirs(app_dir)
-        with open(os.path.join(app_dir, "cassowary_linux_bg_service.desktop"), "w") as df:
-            df.write(desktop_item)
-        os.system("chmod +x {path}".format(path=os.path.join(app_dir, "cassowary_linux_bg_service.desktop")))
-        self.dialog.run("Background service autostart script created for current user !")
-
-    def __create_menu_item(self):
-        desktop_item = """[Desktop Entry]
-Comment=Controls settings for cassowary
-Encoding=UTF-8
-Exec=python -m cassowary -a
-GenericName=cassowary
-Icon={icon}
-Name[en_US]=Cassowary Linux
-Name=Cassowary Linux
-Categories=Utility
-StartupNotify=true
-Terminal=false
-TerminalOptions=
-Type=Application
-Version=1.0
-        """.format(icon=os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "extrares", "cassowary.png"))
-        app_dir = os.path.join(os.path.expanduser("~"), ".local", "share", "applications")
-        if not os.path.exists(app_dir):
-            os.makedirs(app_dir)
-        with open(os.path.join(app_dir, "cassowary_linux.desktop"), "w") as df:
-            df.write(desktop_item)
-        self.dialog.run("Application menu item created for current user !")
+    def __create_shortcuts(self):
+        desktop_files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "desktopfiles")
+        for file in os.listdir(desktop_files_dir):
+            target_dir = None
+            if file.startswith("cassowaryApp_"):
+                target_dir = os.path.join(os.path.expanduser("~"), ".local", "share", "applications")
+            elif "_bg_service" in file:
+                target_dir = os.path.join(os.path.expanduser("~"), ".config", "autostart")
+            elif file.startswith("cassowary-plasma"):
+                target_dir = os.path.join(os.path.expanduser("~"), ".local", "share", "kservices5", "ServiceMenus")
+            if target_dir is not None and not os.path.exists(target_dir):
+                try:
+                    os.makedirs(target_dir)
+                except PermissionError:
+                    target_dir = None
+                    logger.error("Filed to create directory '{}' for file '{}' ".format(target_dir, file))
+            if target_dir is not None:
+                with open(os.path.join(desktop_files_dir, file), "r") as df:
+                    dfc = df.read()
+                dfc = dfc.format(icon=cfgvars.config["def_icon"])
+                with open(os.path.join(target_dir, file), "w") as df:
+                    df.write(dfc)
+                os.system("chmod +x '{path}'".format(path=os.path.join(desktop_files_dir, file)))
+        self.dialog.run("Application menu entry, service autostart and dolphin context menu has been set up ! ")
 
     def __apply_table_props(self):
         tbl_map_header = self.tbl_maps.horizontalHeader()
@@ -258,7 +236,7 @@ Version=1.0
         cfgvars.config["send_suspend_notif"] = 1 if self.inp_susnotif.isChecked() else 0
         cfgvars.config["app_session_client"] = self.inp_apprdc.currentText()
         cfgvars.config["full_session_client"] = self.inp_fullrdc.currentText()
-
+        cfgvars.config["scan_new_installs"] = 1 if self.inp_scannewapps.isChecked() else 0
         cfgvars.save_config()
         self.dialog.run("General settings updated !")
 
@@ -281,6 +259,7 @@ Version=1.0
         self.inp_softlaunch.setChecked(bool(cfgvars.config["soft_launch"]))
         self.inp_rdpscale.setValue({100: 0, 140: 1, 180: 2}[cfgvars.config["rdp_scale"]])
         self.inp_rdpmultimon.setChecked(bool(cfgvars.config["rdp_multimon"]))
+        self.inp_scannewapps.setChecked(bool(cfgvars.config["scan_new_installs"]))
 
     def populate_mappings(self):
         status, data = get_network_maps(self.client)
@@ -371,7 +350,8 @@ Version=1.0
                     self.tbl_installedapps.setItem(rows, 1, QTableWidgetItem(version))
                     self.tbl_installedapps.setCellWidget(rows, 2, btn)
                 except AttributeError:
-                    logger.warning("Looks like some app returned data that cannot be parsed : %s : %s", str(app), traceback.format_exc())
+                    logger.warning("Looks like some app returned data that cannot be parsed : %s : %s", str(app),
+                                   traceback.format_exc())
         else:
             self.dialog.run(data)
 

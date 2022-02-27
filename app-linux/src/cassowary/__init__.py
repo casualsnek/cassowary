@@ -12,7 +12,7 @@ from .gui.components.main_ui import MainWindow
 from .client import Client
 import threading
 import re
-
+from .base.helper import track_new_installations
 
 
 def main():
@@ -23,6 +23,7 @@ def main():
         vm_watcher = threading.Thread(target=vm_suspension_handler)
         vm_watcher.daemon = True
         vm_watcher.start()
+        install_tracker = None
         logger.info("Connecting to server....")
         while True:
             try:
@@ -35,6 +36,9 @@ def main():
                 if response is not False:
                     status, data = response["status"], response["data"]
                     if status:
+                        install_tracker = threading.Thread(target=track_new_installations, args=(client_, ))
+                        install_tracker.daemon = True
+                        install_tracker.start()
                         logger.info("Declared self as host system client to the server")
                         # Now everything should be done by sender and receiver thread,
                         # We just wait here to check if anything has stopped in client object, if yes, recreate client

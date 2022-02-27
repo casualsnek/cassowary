@@ -34,6 +34,8 @@ class Vars:
             "def_icon": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "gui/extrares/cassowary_app.png"),
             "rdp_flags": "",
             "port": 7220,
+            "scan_new_installs": 0,
+            "windowed_full_session": 0,
             "cached_drive_shares": {},
             "winshare_mount_root": os.path.join("/", "mnt", self.app_name),
             "eom": "~~!enm!~~",

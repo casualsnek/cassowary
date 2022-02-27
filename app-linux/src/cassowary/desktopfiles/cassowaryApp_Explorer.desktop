@@ -1,0 +1,14 @@
+[Desktop Entry]
+Comment=Windows explorer on cassowary
+Encoding=UTF-8
+Exec=python3 -m cassowary -c guest-run -- explorer.exe %u
+GenericName= (cassowary remote application)
+Icon=filemanager
+Name[en_US]=Windows Explorer
+Name=Windows Explorer
+Categories=CasualRDH;Utility;
+StartupWMClass=cwapp-explorer
+StartupNotify=true
+Terminal=false
+Type=Application
+Version=1.0

@@ -1,5 +1,6 @@
 from .minidialog import MiniDialog
 from cassowary.base.cfgvars import cfgvars
+from cassowary.base.helper import create_desktop_entry
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 import base64
@@ -37,36 +38,9 @@ class DesktopItemDialog(QDialog):
         self.btn_save.clicked.connect(lambda: self.__save_desktop(filename))
         self.exec_()
 
-    def __save_desktop(self, filename):
-        template = """[Desktop Entry]
-Comment={comment}
-Encoding=UTF-8
-Exec={exec_path}
-GenericName={generic_name}
-Icon={icon}
-Name[en_US]={name}
-Name={name}
-Categories={category}
-StartupWMClass={wmc}
-StartupNotify=true
-Terminal=false
-Type=Application
-Version=1.0
-X-KDE-RunOnDiscreteGpu=false
-X-KDE-SubstituteUID=false
-        """.format(comment=self.inp_comment.text(), exec_path=self.inp_command.text(),
-                   generic_name=self.inp_description.text(), name=self.inp_name.text(),
-                   icon=self.inp_icon.text(), category=self.inp_categories.text(),
-                   wmc="cwapp-"+self.inp_name.text().replace(" ", ""))
-        try:
-            desktop_file_path = os.path.join(os.path.expanduser("~"), ".local", "share", "applications",
-                                             filename + ".desktop")
-            with open(desktop_file_path, "w") as df:
-                df.write(template)
-            os.popen("update-desktop-database {path}".format(
-                path=os.path.join(os.path.expanduser("~"), ".local", "share", "applications")
-            ))
-            self.dialog.run("Desktop file created successfully !")
-        except Exception as e:
-            self.dialog.run("Failed to create desktop file ! \n {}".format(str(e)))
+    def __save_desktop(self):
+        self.dialog.run(create_desktop_entry(
+            self.inp_name.text(), self.inp_comment.text(), self.inp_command.text(),
+            self.inp_description.text(), self.inp_icon.text(), self.inp_categories.text()
+        ))
         self.close()

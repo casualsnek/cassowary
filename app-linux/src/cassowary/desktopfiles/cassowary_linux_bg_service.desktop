@@ -1,0 +1,14 @@
+[Desktop Entry]
+Comment=Cassowary Background Service
+Encoding=UTF-8
+Exec=python3 -m cassowary -bc
+GenericName=cassowary-service
+Icon={icon}
+Name[en_US]=Cassowary Background Service
+Name=Cassowary Background Service
+Categories=Utility
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0

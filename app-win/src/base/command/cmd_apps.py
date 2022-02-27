@@ -2,6 +2,8 @@ import os
 import traceback
 import winreg
 import win32api
+from ..cfgvars import cfgvars
+
 from base64 import b64encode
 from icoextract import IconExtractor
 from base.log import get_logger
@@ -12,7 +14,7 @@ logger = get_logger(__name__)
 
 class ApplicationData:
     def __init__(self):
-        self.CMDS = ["get-installed-apps", "get-exe-icon"]
+        self.CMDS = ["get-installed-apps", "get-exe-icon", "get-new-installations"]
         self.NAME = "installedappcommands"
         self.DESC = "Provides installed app information from registry including app icons"
 
@@ -44,7 +46,7 @@ class ApplicationData:
         return img_str
 
     @staticmethod
-    def __find_installed():
+    def find_installed():
         logger.debug("Getting list of installed applications")
         applications = []
         for installation_mode in [winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER]:
@@ -62,7 +64,7 @@ class ApplicationData:
                     path_key = winreg.QueryValueEx(app_entry, None)
                     path = os.path.expandvars(str(path_key[0]))
                     if path not in applications:
-                        applications.append(path)
+                        applications.append(os.path.abspath(path))
                 except Exception as e:
                     if "[WinError 259]" in str(e):
                         break
@@ -73,17 +75,36 @@ class ApplicationData:
                         pass
         return applications
 
+    def __get_new_apps(self):
+        first_run = len(cfgvars.config["tracked_installations"]) == 0
+        apps = self.find_installed()
+        if first_run:
+            cfgvars.config["tracked_installations"] = apps
+            cfgvars.save_config()
+            return []
+        else:
+            return list(set(apps).difference(cfgvars.config["tracked_installations"]))
+
     def run_cmd(self, cmd):
         if cmd[0] == "get-installed-apps":
             installed_apps = []
             # app_name: [path_to_exe, version, icon ]
-            apps = self.__find_installed()
+            apps = self.find_installed()
             for app in apps:
                 app_info = self.__get_exe_info(app)
                 # NOTE: app_info[0] is app icon remove it from the returned data
                 installed_apps.append([app_info[0], app, app_info[1]])
                 # [description, path, version]
             return True, installed_apps
+        elif cmd[0] == "get-new-installations":
+            new_apps_info = []
+            new_apps = self.__get_new_apps()
+            for app in new_apps:
+                app_info = self.__get_exe_info(app)
+                new_apps_info.append([app_info[0], app, app_info[1]])
+                cfgvars.config["tracked_installations"].append(app)
+            cfgvars.save_config()
+            return True, new_apps_info
         elif cmd[0] == "get-exe-icon":
             return True, self.__get_exe_image(cmd[1])
         else:

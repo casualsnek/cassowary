@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=openPSellHere;openExplorerHere
+X-KDE-AuthorizeAction=shell_access
+
+[Desktop Action openPSellHere]
+Icon=utilities-terminal
+Exec=python3 -m cassowary -c guest-run -- powershell.exe -noexit -command Set-Location -literalPath '%f'
+Name=Open Windows Powershell Here
+
+[Desktop Action openExplorerHere]
+Icon=utilities-terminal
+Exec=python3 -m cassowary -c guest-run -- explorer.exe '%f'
+Name=Open Windows Explorer Here

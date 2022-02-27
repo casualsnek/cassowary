@@ -9,6 +9,10 @@ import os
 import re
 import libvirt
 from cassowary.gui.components.vmstart import StartDg
+from cassowary.base.functions import get_installed_apps, get_exe_icon
+import base64
+
+
 
 logger = get_logger(__name__)
 wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
@@ -18,6 +22,41 @@ wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clip
 
 def randomstr(leng=4):
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(leng))
+
+
+def create_desktop_entry(name, comment, exec_path, generic_name, icon, category):
+    filename = "cassowaryApp_" + ''.join(e for e in name if e.isalnum())
+    template = """[Desktop Entry]
+    Comment={comment}
+    Encoding=UTF-8
+    Exec={exec_path}
+    GenericName={generic_name}
+    Icon={icon}
+    Name[en_US]={name}
+    Name={name}
+    Categories={category}
+    StartupWMClass={wmc}
+    StartupNotify=true
+    Terminal=false
+    Type=Application
+    Version=1.0
+    X-KDE-RunOnDiscreteGpu=false
+    X-KDE-SubstituteUID=false
+            """.format(comment=comment, exec_path=exec_path,
+                       generic_name=generic_name, name=name,
+                       icon=icon, category=category,
+                       wmc="cwapp-" + name.replace(" ", ""))
+    try:
+        desktop_file_path = os.path.join(os.path.expanduser("~"), ".local", "share", "applications",
+                                         filename + ".desktop")
+        with open(desktop_file_path, "w") as df:
+            df.write(template)
+        os.popen("update-desktop-database {path}".format(
+            path=os.path.join(os.path.expanduser("~"), ".local", "share", "applications")
+        ))
+        return "Desktop file created successfully !"
+    except Exception as e:
+        return "Failed to create desktop file ! \n {}".format(str(e))
 
 
 def warn_dependencies():
@@ -91,7 +130,7 @@ def get_windows_cifs_locations():
     return output
 
 
-def mount_pending():
+def mount_pending(on_complete=None):
     mount = ""
     uid = os.popen("id -u").read().strip()
     gid = os.popen("id -g").read().strip()
@@ -117,9 +156,11 @@ def mount_pending():
             ).replace("\\", "/")).read()
         else:
             os.popen("pkexec sh -c '{command}'".format(command=mount).replace("\\", "/")).read()
+    if on_complete is not None:
+        on_complete()
 
 
-def unmount_all():
+def unmount_all(on_complete=None):
     swapped_mounted_locations = dict((value, key) for key, value in get_windows_cifs_locations().items())
     expanded_cached_shares = var_expanded_shares()
     umount_cmd = ""
@@ -137,6 +178,8 @@ def unmount_all():
             ).replace("\\", "/")).read()
         else:
             os.popen("pkexec sh -c '{command}'".format(command=umount_cmd))
+    if on_complete is not None:
+        on_complete()
 
 
 def var_expanded_shares():
@@ -251,6 +294,9 @@ def full_rdp():
         share_root=cfgvars.config["rdp_share_root"],
         mflag="multimon" if multimon_enable else "span"
     )
+    if cfgvars.config["windowed_full_session"]:
+        logger.debug("Full session in window mode requested.. span and multimon flags removed !")
+        cmd_final = cmd_final.replace(" /"+"multimon" if multimon_enable else "span", "")
     logger.debug("Creating a full RDP session with commandline  : " + command)
     process = subprocess.Popen(["sh", "-c", "{}".format(cmd_final)])
     process.wait()
@@ -339,6 +385,46 @@ def vm_suspension_handler():
             tc = 0
             logger.debug("Refreshing config to update to probable config changes !")
             cfgvars.refresh_config()
+
+
+def track_new_installations(client):
+    while cfgvars.config["scan_new_installs"]:
+        status, data = get_installed_apps(client) # Replace with get new installations
+        if status is not None:
+            for app in data:
+                try:
+                    name = app[0].split(":")[0]
+                    desc = ""
+                    version = app[2]
+                    path = app[1]
+                    parts = app[0].split(":")
+                    for part in parts[1:len(parts)]:
+                        desc = desc + part + ":"
+                    desc = desc[:-1] + " (cassowary remote application)"
+                    comment = "'{}' version '{}'".format(name, version)
+                    command = "python3 -m cassowary -c guest-run -- '{}' %u".format(
+                        path.replace("\\", "\\\\").replace("'", "").replace("\"", ""))
+                    ico_status, ico_data = get_exe_icon(client, path)
+                    filename = "cassowaryApp_" + ''.join(e for e in name if e.isalnum())
+                    icon_path = os.path.join(cfgvars.cache_dir, filename + ".ico")
+                    try:
+                        if not ico_data == "":
+                            with open(icon_path, "wb") as ico_file:
+                                ico_file.write(base64.b64decode(ico_data))
+                        else:
+                            icon_path = cfgvars.config["def_icon"]
+                    except KeyError:
+                        pass
+                    create_desktop_entry(name, comment, command,
+                        desc, icon_path, "CasualRDH;Utility;"
+                    )
+                    logger.debug("Found new installation and created desktop shortcut for '{}'".format(name))
+                except AttributeError:
+                    logger.warning("Looks like some app returned data that cannot be parsed : %s : %s", str(app),
+                                   traceback.format_exc())
+        else:
+            logger.error("Cannot fetch data for new applications")
+        time.sleep(8)
 
 
 def fix_black_window(forced=False):

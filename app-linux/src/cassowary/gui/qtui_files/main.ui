@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>601</width>
-    <height>615</height>
+    <height>631</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -756,7 +756,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Kill FreeRDP</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="lb_killrdp">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -769,7 +769,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Apps are glitchy and wont work</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="lb_fullsession">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -795,7 +795,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Launch</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_4">
+          <widget class="QLabel" name="lb_vmreboot">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -821,7 +821,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Reboot</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="lb_closesession">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -860,7 +860,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Stop</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_6">
+          <widget class="QLabel" name="lb_stopserver">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -873,7 +873,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             <string>Stop server</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_7">
+          <widget class="QLabel" name="lb_miscinfo">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -903,7 +903,7 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <string>Power off</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_8">
+          <widget class="QLabel" name="lb_vmpoweroff">
            <property name="geometry">
             <rect>
              <x>20</x>
@@ -916,50 +916,24 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <string>Power off VM</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_9">
+          <widget class="QLabel" name="lb_createdesktopshortcuts">
            <property name="geometry">
             <rect>
              <x>20</x>
              <y>270</y>
-             <width>261</width>
+             <width>351</width>
              <height>17</height>
             </rect>
            </property>
            <property name="text">
-            <string>Setup Background Service autostart</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="btn_setupautostart">
-           <property name="geometry">
-            <rect>
-             <x>390</x>
-             <y>260</y>
-             <width>171</width>
-             <height>41</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Setup Autostart</string>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_10">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>310</y>
-             <width>261</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Create Application menu shortcut</string>
+            <string>Setup essential desktop shortcuts and service autostart</string>
            </property>
           </widget>
           <widget class="QPushButton" name="btn_createdesktop">
            <property name="geometry">
             <rect>
              <x>390</x>
-             <y>300</y>
+             <y>260</y>
              <width>171</width>
              <height>41</height>
             </rect>
@@ -1157,9 +1131,9 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
           <widget class="QCheckBox" name="inp_enbsuspend">
            <property name="geometry">
             <rect>
-             <x>300</x>
+             <x>440</x>
              <y>301</y>
-             <width>251</width>
+             <width>111</width>
              <height>20</height>
             </rect>
            </property>
@@ -1224,9 +1198,9 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
           <widget class="QCheckBox" name="inp_susnotif">
            <property name="geometry">
             <rect>
-             <x>300</x>
+             <x>440</x>
              <y>341</y>
-             <width>251</width>
+             <width>111</width>
              <height>20</height>
             </rect>
            </property>
@@ -1239,12 +1213,12 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
             <rect>
              <x>20</x>
              <y>340</y>
-             <width>281</width>
+             <width>301</width>
              <height>17</height>
             </rect>
            </property>
            <property name="text">
-            <string>Send notification when VM suspends</string>
+            <string>Send notification when VM suspends or resumes</string>
            </property>
           </widget>
           <widget class="QLineEdit" name="inp_sharedroot">
@@ -1305,9 +1279,61 @@ App like Windows 10's Photoviewer will generate a lot of glitches.</string>
           <widget class="QCheckBox" name="inp_softlaunch">
            <property name="geometry">
             <rect>
-             <x>300</x>
+             <x>440</x>
              <y>380</y>
-             <width>251</width>
+             <width>111</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lb_fullrdp_window_mode">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>420</y>
+             <width>281</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Use windowed mode for full RDP session</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lb_scanfornewapps">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>460</y>
+             <width>391</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Auto detect and create shortcut for newly installed applications</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="inp_fullrdp_windowed">
+           <property name="geometry">
+            <rect>
+             <x>440</x>
+             <y>420</y>
+             <width>111</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="inp_scannewapps">
+           <property name="geometry">
+            <rect>
+             <x>440</x>
+             <y>460</y>
+             <width>111</width>
              <height>20</height>
             </rect>
            </property>

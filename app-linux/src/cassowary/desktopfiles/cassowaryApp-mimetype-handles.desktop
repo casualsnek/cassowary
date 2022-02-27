@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Cassowary Executable Handle
+GenericName=Windows apps runner
+Comment=Opens windows executable files with cassowary
+Exec=python3 -m cassowary -c guest-open -- %u
+Icon={icon}
+Terminal=false
+NoDisplay=true
+MimeType=application/vnd.microsoft.portable-executable;application/x-ms-dos-executable;application/x-msi;

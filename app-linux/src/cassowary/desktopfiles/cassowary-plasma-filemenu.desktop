@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/octet-stream;
+Actions=openWithCassowary;
+X-KDE-AuthorizeAction=shell_access
+
+[Desktop Action openWithCassowary]
+Icon=utilities-terminal
+Exec=python3 -m cassowary -c guest-open -- '%u'
+Name=Open with default VM app
