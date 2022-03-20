@@ -1,14 +1,14 @@
 # 3. Extra How to(s) and FAQ(s)
 
-**Q. Launch terminal/Open on host on Windows file manager says drive is not shared?**
+**Q. Launch terminal/Open on host on Windows file manager says the drive is not shared?**
 
-A. Open cassowary on linux, go to **"Folder Mapping"** tab, go to **"Windows->Linux"** sub tab then create a new share for drive where the file is located then click on mount all.
+A. Open cassowary on Linux, go to **"Folder Mapping"** tab, go to **"Windows->Linux"** sub tab then create a new share for the drive where the file is located then click on mount all.
 
 ---
 
 **Q. How do I share my folder on Linux to Windows as local drive ?**
 
-A. Open cassowary on linux, go to **"Folder Mapping"** tab Goto **"Linux->Windows"** sub tab then click on **Create new file**, give name to share, browse location, choose drive letter then click on create map.
+A. Open cassowary on Linux, go to **"Folder Mapping"** tab Goto **"Linux->Windows"** sub tab then click on **Create new file**, give name to share, browse location, choose drive letter then click on create map.
 
 ---
 
@@ -34,15 +34,15 @@ A. Most Linux system allow setting default application for file type, create a A
 
 ---
 
-**Q. I setup every thing but get connection error which launching cassowary Linux?**
+**Q. I setup everything but get a connection error which launching cassowary Linux?**
 
-A. Since cassowary wont launch without a user being logged in, try launching any windows application and click reconnect !
+A. Since cassowary won't launch without a user being logged in, try launching any windows application and click reconnect !
 
 ---
 
 **Q. Open on host or open host terminal does not work?**
 
-A. Make sure you have setup background service autostart (logout and login is required after clicking on setup button). You can also try manually launching background service using:
+A. Make sure you have setup background service autostart (logout and login is required after clicking on the setup button). You can also try manually launching background service using:
 
 ```bash
 $ python -m cassowary -bc
@@ -52,7 +52,7 @@ $ python -m cassowary -bc
 
 **Q. Setting file extension on 'Launch on host' does not automatically open it with host application.**
 
-A. Make sure background service shortcut is created and is runing, For an extension with app to open it already installed will cause windows to show dialog to choose default app. Select 'Windows script host' on the shown dialog.
+A. Make sure background service shortcut is created and is running, For an extension with app to open it already installed will cause windows to show dialog to choose default app. Select 'Windows script host' on the shown dialog.
 
 ---
 
@@ -68,6 +68,6 @@ A. This happens if you have a VPN running on host, try disabling VPN and interne
 
 ---
 
-**Q. I have found a bug/issue, have a suggestion or I have questions not answered here!**
+**Q. I have found a bug/issue, have a suggestion, or have questions not answered here!**
 
 A. Feel free to [open an issue here](https://github.com/casualsnek/cassowary/issues)!
