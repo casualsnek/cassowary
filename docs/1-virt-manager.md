@@ -156,7 +156,7 @@ with:
 - Go to Display Spice section and set **Listen Type** to **None**; also check the OpenGL option and click Apply;
 - Go to Video QXL section and set **Model** to **VirtIO** and check the 3D acceleration option;
 
-> If you get a black screen after those two changes, revert those changes. This could happen with nvidia graphics card;
+> If you get a black screen after those changes, revert those changes. This could happen with nvidia graphics card;
 
 - Start the VM by clicking the play button on the top left (you may need to click the Monitor icon to show the VM screen ). Login to desktop;
 - Open up edge and browse to this page and continue the instructions for installing cassowary.
