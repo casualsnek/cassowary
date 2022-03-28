@@ -26,7 +26,7 @@ $ sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
 On some Linux distribution if AppArmor is enabled it is necessary to modify the file `/etc/apparmor.d/usr.sbin.dnsmasq` to be able to connect to the network or virt-manager will throw a segmentation fault.
 
 If you can't find the `dnsmasq` profile, be sure to install every additional packages regarding AppArmor profiles.  
-If you can't still find the `dnsmasq` profile, you can always download it from from [AppArmor gitlab](https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq) and copy it to the right location:
+If you can't still find the `dnsmasq` profile, you can always download it from [AppArmor gitlab](https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq) and copy it to the right location:
 
 ```bash
 $ wget https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq -O ~/usr.sbin.dnsmasq
@@ -119,7 +119,7 @@ with:
 </clock>
 ```
 
-- In the Memory tab set the **Curent allocation** to **1024**, so the VM won't use 4GiB of memory directly but it will range from 1GiB to 4GiB;  
+- In the Memory tab set the **Current allocation** to **1024**, so the VM won't use 4GiB of memory directly but it will range from 1GiB to 4GiB;  
   
   <img src="img/virt-manager-6.png" alt="virt-manager-6">
 
@@ -131,7 +131,7 @@ with:
 
 <img src="img/virt-manager-7.png" alt="virt-manager-7">
 
-- Move over to NIC section and set **Device Model** to **virtio**;  
+- Move over to NIC section and set **Device model** to **virtio**;  
   
   <img src="img/virt-manager-8.png" alt="virt-manager-8">
 
@@ -148,22 +148,22 @@ with:
 <img src="img/virt-manager-10.png" alt="virt-manager-10">
 
 - After that your drive will show and you can continue like a normal Windows 10 installation;
-- After some time you will get to "Let's connect to internet page", click on **I dont have internet** at bottom left and continue with limited setup;
-- Set you username and password. The Password is not allowed to be blank;
+- After some time you will get to "Let's connect to internet page", click on **I don't have internet** at bottom left and continue with limited setup;
+- Set your username and password. The Password is not allowed to be blank;
 - After you get to Windows 10 desktop open This PC and browse to virtio-win CD drive and install **virtio-win-gt-x64.exe**;
 - It's also suggested to install the [spice guest tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe) to also enable copy-paste between host and guest;
-- Shut down the VM and from the menu bar select **View** and then **Details**;
+- Shut down the VM and from the menubar select **View** and then **Details**;
 - Go to Display Spice section and set **Listen Type** to **None**; also check the OpenGL option and click Apply;
 - Go to Video QXL section and set **Model** to **VirtIO** and check the 3D acceleration option;
 
-> If after those two changes all you get is a black screen, revert those changes. This could happen with nVidia graphics card;
+> If you get a black screen after those changes, revert those changes. This could happen with nvidia graphics card;
 
-- Start the VM by clicking the play button on top left (you may need to click the Monitor icon to show the VM screen ). Login to desktop;
+- Start the VM by clicking the play button on the top left (you may need to click the Monitor icon to show the VM screen ). Login to desktop;
 - Open up edge and browse to this page and continue the instructions for installing cassowary.
 
 ---
 
-Note: For better 3D performance you can use VmWare or other virtualization platform, ( The IP autodetection and VM auto suspend only works for libvirt based platforms as of now.
+Note: For better 3D performance you can use VMware or other virtualization platforms, ( The IP autodetection and VM auto suspend only works for libvirt based platforms as of now.
 
 ---
 
