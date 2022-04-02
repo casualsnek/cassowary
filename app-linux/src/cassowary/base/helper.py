@@ -103,7 +103,7 @@ def mount_pending():
             # actually mount it
             mount_point = os.path.join(cfgvars.config["winshare_mount_root"], expanded_cached_shares[resource_path][1])
             mount = mount + 'mkdir -p {mount_pt} && mount -t cifs -o username="{win_uname}",' \
-                            'password="{win_pass}",uid={uid},gid={gid} "{net_loc}" "{mount_pt}" && '.format(
+                            'password="{win_pass}",uid={uid},gid={gid} \'{net_loc}\' "{mount_pt}" && '.format(
                 win_uname=cfgvars.config["winvm_username"], win_pass=cfgvars.config["winvm_password"],
                 mount_pt=mount_point, net_loc=expanded_cached_shares[resource_path][0], uid=uid, gid=gid
             )
