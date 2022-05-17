@@ -26,10 +26,10 @@ $ sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
 On some Linux distribution if AppArmor is enabled it is necessary to modify the file `/etc/apparmor.d/usr.sbin.dnsmasq` to be able to connect to the network or virt-manager will throw a segmentation fault.
 
 If you can't find the `dnsmasq` profile, be sure to install every additional packages regarding AppArmor profiles.  
-If you can't still find the `dnsmasq` profile, you can always download it from [AppArmor gitlab](https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq) and copy it to the right location:
+If you can't still find the `dnsmasq` profile, you can always download it from [AppArmor gitlab](https://gitlab.com/apparmor/apparmor/-/raw/master/profiles/apparmor.d/usr.sbin.dnsmasq) and copy it to the right location:
 
 ```bash
-$ wget https://gitlab.com/apparmor/apparmor/-/blob/master/profiles/apparmor.d/usr.sbin.dnsmasq -O ~/usr.sbin.dnsmasq
+$ wget https://gitlab.com/apparmor/apparmor/-/raw/master/profiles/apparmor.d/usr.sbin.dnsmasq -O ~/usr.sbin.dnsmasq
 $ sudo mv ~/usr.sbin.dnsmasq /etc/apparmor.d/
 ```
 
