@@ -139,6 +139,10 @@ with:
   
   <img src="img/virt-manager-9.png" alt="virt-manager-9">
 
+- If you are installing Windows 11, you need TPM and UEFI with SecureBoot as well
+	- Click **Add Hardware**, select **TPM**, set **Type** to **Emulated**, click on **Advanced options**, set **Model** to **TIS** and set **Version** to **2.0**
+	- In **Overview**, set **Chipset** to **Q35** and set **Firmware** to **UEFI x86_64: /usr/share/edk2/ovmf/OVMF_CODE.secboot.fd**
+
 - Click **Begin Installation** on top left;
 
 - Follow the installation instructions for Windows 10 and when choosing a Custom installation you will get no drives to install Windows 10 on. To make the VirtIO drive works you will have to click on **Load Driver**, then choose **OK** and finally select the driver for Windows 10;
