@@ -63,7 +63,7 @@ if __name__ == "__main__":
                         Usage   :
                                 casualrdh_linux -a path-map -- /home/user/document/personal.docx
     """
-    BASE_RDP_CMD = 'xfreerdp {rdflag} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +auto-reconnect +clipboard ' \
+    BASE_RDP_CMD = 'xfreerdp {rdflag} /sec:tls /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +auto-reconnect +clipboard ' \
                    '+home-drive -wallpaper /scale:{scale} /dynamic-resolution /{mflag} /wm-class:"{wmclass}" ' \
                    '/app:"{execu}" /app-icon:"{icon}"'
     parser = argparse.ArgumentParser(description=about, formatter_class=argparse.RawDescriptionHelpFormatter)
