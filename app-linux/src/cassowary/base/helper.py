@@ -11,7 +11,7 @@ import libvirt
 from cassowary.gui.components.vmstart import StartDg
 
 logger = get_logger(__name__)
-wake_base_cmd = 'xfreerdp /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
+wake_base_cmd = 'xfreerdp /sec:tls /d:"{domain}" /u:"{user}" /p:"{passd}" /v:"{ip}" +clipboard /a:drive,root,{share_root} ' \
                 '+decorations /cert-ignore /sound /scale:100 /dynamic-resolution /span  ' \
                 '/wm-class:"cassowaryApp-echo" /app:"{app}"'
 
@@ -235,7 +235,7 @@ def create_reply(message, data, status):
 
 
 def full_rdp():
-    command = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,{share_root} +auto-reconnect ' \
+    command = '{rdc} /sec:tls /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} /a:drive,root,{share_root} +auto-reconnect ' \
               '+clipboard /cert-ignore /audio-mode:1 /scale:{scale} /wm-class:"cassowaryApp-FULLSESSION" ' \
               '/dynamic-resolution /{mflag} {rdflag} 1> /dev/null 2>&1 &'
     multimon_enable = int(os.environ.get("RDP_MULTIMON", cfgvars.config["rdp_multimon"]))
