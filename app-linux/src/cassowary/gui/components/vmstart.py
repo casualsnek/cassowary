@@ -25,8 +25,6 @@ class StartDg(QDialog):
         stt.start()
 
     def wait_vm(self):
-        self.btn_startvm.hide()
-        self.btn_cancel.setEnabled(False)
         if cfgvars.config["vm_name"].strip() != "":
             logging.debug("Using VM")
             try:
