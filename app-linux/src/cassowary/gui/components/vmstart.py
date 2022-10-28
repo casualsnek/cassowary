@@ -18,11 +18,16 @@ class StartDg(QDialog):
         uic.loadUi(os.path.join(cfgvars.app_root, "gui", "qtui_files", "vmstart.ui"), self)
         self.lb_msg.setText("The VM '{}' is not running. Do you want to start the vm now ?\n".format(cfgvars.config["vm_name"]))
         self.btn_startvm.clicked.connect(self.bg_st)
+        self.btn_startvm.clicked.connect(self.disable_buttons)
         self.btn_cancel.clicked.connect(self.close)
 
     def bg_st(self):
         stt = threading.Thread(target=self.wait_vm)
         stt.start()
+
+    def disable_buttons(self):
+        self.btn_startvm.setEnabled(False)
+        self.btn_cancel.setEnabled(False)
 
     def wait_vm(self):
         if cfgvars.config["vm_name"].strip() != "":
