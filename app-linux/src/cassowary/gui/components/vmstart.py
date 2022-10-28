@@ -4,6 +4,7 @@ import threading
 import libvirt
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from cassowary.base.cfgvars import cfgvars
 from cassowary.base.log import get_logger
 import os
@@ -18,18 +19,22 @@ class StartDg(QDialog):
         uic.loadUi(os.path.join(cfgvars.app_root, "gui", "qtui_files", "vmstart.ui"), self)
         self.lb_msg.setText("The VM '{}' is not running. Do you want to start the vm now ?\n".format(cfgvars.config["vm_name"]))
         self.btn_startvm.clicked.connect(self.bg_st)
-        self.btn_startvm.clicked.connect(self.disable_buttons)
         self.btn_cancel.clicked.connect(self.close)
+        self.enable_buttons.connect(self.buttons_set_enabled)
 
     def bg_st(self):
         stt = threading.Thread(target=self.wait_vm)
         stt.start()
 
-    def disable_buttons(self):
-        self.btn_startvm.setEnabled(False)
-        self.btn_cancel.setEnabled(False)
+    enable_buttons=pyqtSignal(bool)
+
+    @pyqtSlot(bool)
+    def buttons_set_enabled(self, state: bool):
+        self.btn_startvm.setEnabled(state)
+        self.btn_cancel.setEnabled(state)
 
     def wait_vm(self):
+        self.enable_buttons.emit(False)
         if cfgvars.config["vm_name"].strip() != "":
             logging.debug("Using VM")
             try:
