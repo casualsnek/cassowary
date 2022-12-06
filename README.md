@@ -14,6 +14,8 @@ With Cassowary you can run a Windows virtual machine and use Windows application
 
 Please give a star ⭐ or follow this project if you find it useful.
 
+**Join the discussion on Discord: [Server URL](https://discord.gg/hz4mAwSujH)**
+
 ## Cassowary supports:
 
 - Running Windows applications as if they were native applications
