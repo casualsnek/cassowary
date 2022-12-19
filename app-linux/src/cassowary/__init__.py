@@ -111,7 +111,7 @@ def main():
                         Usage   :
                                 cassowary -c path-map -- /home/user/document/personal.docx
     """
-    BASE_RDP_CMD = '{rdc} /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,{share_root} ' \
+    BASE_RDP_CMD = '{rdc} /sec:tls /d:"{domain}" /u:"{user}" /p:"{passd}" /v:{ip} +clipboard /a:drive,root,{share_root} ' \
                    '+decorations /cert-ignore /sound /scale:{scale} /dynamic-resolution /{mflag} {rdflag} ' \
                    '/wm-class:"{wmclass}" ' \
                    '/app:"{execu}" /app-icon:"{icon}" '
