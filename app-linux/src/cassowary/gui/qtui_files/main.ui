@@ -766,7 +766,7 @@ If you add &quot;jpg&quot; here, it will use your linux image viewer instead of 
             </rect>
            </property>
            <property name="text">
-            <string>Apps are glitchy and wont work</string>
+            <string>Apps are glitchy and won't work</string>
            </property>
           </widget>
           <widget class="QLabel" name="label_3">

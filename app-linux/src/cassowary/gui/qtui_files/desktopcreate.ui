@@ -78,7 +78,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Categories (; seperated)</string>
+       <string>Categories (; separated)</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

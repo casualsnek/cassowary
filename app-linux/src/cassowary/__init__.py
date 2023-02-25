@@ -263,7 +263,7 @@ def main():
                                                   rdc=cfgvars.config["app_session_client"],
                                                   share_root=cfgvars.config["rdp_share_root"],
                                                   execu="cmd.exe", icon=icon)
-                        #                              |--- This is ugly too but without this path with spaces wont work
+                        #                              |--- This is ugly too but without this path with spaces won't work
                         #                              |----------------|
                         #                              V                V
                         cmd = cmd + '/app-cmd:"/c start \\"\\"\\"\\"\\"\\" {} "'.format(path)

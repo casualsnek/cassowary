@@ -221,7 +221,7 @@ def path_translate_to_guest(path):
                 else:
                     return full_path.replace(cfgvars.config["rdp_share_root"], "Z:").replace("/", "\\")
         else:
-            logger.warning("Path '%s' is not a path inside current shared root '%s', and wont be available to guest !")
+            logger.warning("Path '%s' is not a path inside current shared root '%s', and won't be available to guest !")
             return ("Z:" + full_path).replace("/", "\\")
     else:
         return path
@@ -379,7 +379,7 @@ def vm_wake():
     vm_app_launch_marker = "/tmp/cassowary-app-launched.state"
     logger.debug("Attempting to resume VM")
     # If VM name is not set it may be windows instanced elsewhere which we cannot pause or resume !
-    # Since this function will be called everytime an cassowary application is launched,
+    # Since this function will be called every time an cassowary application is launched,
     # Add a file with timestamp for notifying vm_suspension_handler from background client that an app was launched just
     # now so delay suspend by few seconds while the application process is created !
     with open(vm_app_launch_marker, "w") as mf:
