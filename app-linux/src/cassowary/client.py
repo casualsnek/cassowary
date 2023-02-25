@@ -44,7 +44,7 @@ class Client():
                 logger.warning("Receiver thread is still alive, waiting for termination")
                 self.stop_connecting = True
                 self.receiver.join(3)
-        # Re create socket conection
+        # Re create socket connection
         self.server = socket.socket()
         self.server.settimeout(5)
         self.server.connect((self.__host, self.__port))
@@ -149,7 +149,7 @@ class Client():
                     ))
             except (json.JSONDecodeError, KeyError, IndexError) as e:
                 logger.error("Client received a deformed message. Message body: %s", str(message))
-        logger.debug("Stopping receive sub-threadd... (%s)", str(self.stop_connecting))
+        logger.debug("Stopping receive sub-threads... (%s)", str(self.stop_connecting))
 
     def __send(self):
         while not self.stop_connecting:

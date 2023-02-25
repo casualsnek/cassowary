@@ -139,7 +139,7 @@ class FileAssociation:
                                                  r"SOFTWARE\casualhXDGO\Capablities\FileAssociations")
                             winreg.DeleteValue(cap, ".{ext}".format(ext=file_format))
                             registry.Close()
-                            logger.debug("Capablity removed ")
+                            logger.debug("Capability removed ")
                         except (FileNotFoundError, OSError):
                             logger.error("Could not remove association with extension properly -> %s",
                                          traceback.format_exc())
@@ -168,11 +168,11 @@ class FileAssociation:
 
     def run_cmd(self, cmd):
         if cmd[0] == "get-associations":
-            logger.debug("Got assocation data request")
+            logger.debug("Got association data request")
             status, message = self.__get_associations()
             return status, message
         elif cmd[0] == "set-association":
-            logger.debug("Got set association requets. Params: %s", str(cmd))
+            logger.debug("Got set association requests. Params: %s", str(cmd))
             try:
                 status, message = self.__set_association(cmd[1])
                 return status, message
@@ -180,7 +180,7 @@ class FileAssociation:
                 logger.warning("Error setting file association, Command - %s  : %s", str(cmd), traceback.format_exc())
                 return False, "Command 'set-association' is missing parameter. Required: file_extension "
         elif cmd[0] == "unset-association":
-            logger.debug("Got unset association requets. Params: %s", str(cmd))
+            logger.debug("Got unset association requests. Params: %s", str(cmd))
             try:
                 status, message = self.__unset_associations(cmd[1])
                 return status, message
